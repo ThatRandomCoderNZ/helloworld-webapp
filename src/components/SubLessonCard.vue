@@ -1,57 +1,42 @@
 <script lang="ts">
-import gsap from 'gsap';
-import { defineComponent } from 'vue';
+import gsap from "gsap";
+import { defineComponent } from "vue";
 
 export default defineComponent({
-    props: {
-        row: {
-            type: Number,
-            default: 5,
-        },
-        column: {
-            type: Number,
-            default: 20,
-        },
-        title: String,
+  props: {
+    row: {
+      type: Number,
+      default: 5,
     },
-
-    methods: {
-        clicked(){
-            gsap.to('#car', {
-                x: 10 * this.column,
-                y: 5 * this.row,
-                duration: 1,
-            })
-        },
+    column: {
+      type: Number,
+      default: 20,
     },
+    title: String,
+  },
 
-    mounted(){
-        console.log(this.row);
-        this.$nextTick(()=>{
-            
-        })
-        
-    }
+  methods: {
+    clicked() {
+      gsap.to("#car", {
+        x: 10 * this.column,
+        y: 5 * this.row,
+        duration: 1,
+      });
+    },
+  },
+
+  mounted() {
+    console.log(this.row);
+  },
 });
 </script>
 
-
 <template>
-<div id="car" class="card">
+  <div id="car" class="card">
     <h1 class="title">
-        {{title}}
+      {{ title }}
     </h1>
-</div>
+  </div>
 </template>
 
-
-<style>
-
-
-
-</style>
-
-
-
-
-
+<style></style>
