@@ -63,670 +63,768 @@ header {
 
 <script setup lang="ts">
 import LessonMenuCard from "../components/LessonMenuCard.vue";
+import type { Lessons } from "@/components/LessonMenuCard.vue";
 
-const kanji = [
-  {
-    id: 0,
-    title: "色",
-    data: [
-      {
-        japanese: "赤",
-        english: "Red",
-        furigana: "あか",
-      },
-      {
-        japanese: "橙色",
-        english: "Orange",
-        furigana: "だいだいいろ",
-      },
-      {
-        japanese: "黄色",
-        english: "Yellow",
-        furigana: "きいろ",
-      },
-      {
-        japanese: "緑",
-        english: "Green",
-        furigana: "みどり",
-      },
-      {
-        japanese: "青",
-        english: "Blue",
-        furigana: "あお",
-      },
-      {
-        japanese: "紫",
-        english: "Purple",
-        furigana: "むらさき",
-      },
-      {
-        japanese: "桃色",
-        english: "Pink",
-        furigana: "ももいろ",
-      },
-      {
-        japanese: "茶色",
-        english: "Brown",
-        furigana: "ちゃいろ",
-      },
-      {
-        japanese: "灰色",
-        english: "Grey",
-        furigana: "はいいろ",
-      },
-      {
-        japanese: "黒",
-        english: "Black",
-        furigana: "くろ",
-      },
-      {
-        japanese: "白",
-        english: "White",
-        furigana: "しろ",
-      },
-      {
-        japanese: "色",
-        english: "Colour",
-        furigana: "いろ",
-      },
-    ],
-  },
-  {
-    id: 1,
-    title: "時間 ",
-    data: [
-      {
-        japanese: "時間",
-        english: "Time",
-        furigana: "じかん",
-      },
-      {
-        japanese: "年",
-        english: "Year",
-        furigana: "とし / ねん",
-      },
-      {
-        japanese: "月",
-        english: "Month",
-        furigana: "げつ / つき",
-      },
-      {
-        japanese: "日",
-        english: "Day",
-        furigana: "にち / ひ",
-      },
-      {
-        japanese: "今日",
-        english: "Today",
-        furigana: "きょう",
-      },
-      {
-        japanese: "明日",
-        english: "Tomorrow",
-        furigana: "あした",
-      },
-      {
-        japanese: "昨日",
-        english: "Yesterday",
-        furigana: "きのう",
-      },
-      {
-        japanese: "分",
-        english: "Minute",
-        furigana: "ふん / ぶん",
-      },
-      {
-        japanese: "時",
-        english: "Hour",
-        furigana: "じ / とき",
-      },
-    ],
-  },
-  {
-    id: 2,
-    title: "時間 ",
-    data: [
-      {
-        japanese: "時間",
-        english: "Time",
-        furigana: "じかん",
-      },
-      {
-        japanese: "年",
-        english: "Year",
-        furigana: "とし / ねん",
-      },
-      {
-        japanese: "月",
-        english: "Month",
-        furigana: "げつ / つき",
-      },
-      {
-        japanese: "日",
-        english: "Day",
-        furigana: "にち / ひ",
-      },
-      {
-        japanese: "今日",
-        english: "Today",
-        furigana: "きょう",
-      },
-      {
-        japanese: "明日",
-        english: "Tomorrow",
-        furigana: "あした",
-      },
-      {
-        japanese: "昨日",
-        english: "Yesterday",
-        furigana: "きのう",
-      },
-      {
-        japanese: "分",
-        english: "Minute",
-        furigana: "ふん / ぶん",
-      },
-      {
-        japanese: "時",
-        english: "Hour",
-        furigana: "じ / とき",
-      },
-    ],
-  },
-];
+const kanji: Lessons = {
+  lessonData: [
+    {
+      id: 0,
+      title: "色",
+      data: [
+        {
+          japanese: "赤",
+          english: "Red",
+          furigana: "あか",
+        },
+        {
+          japanese: "橙色",
+          english: "Orange",
+          furigana: "だいだいいろ",
+        },
+        {
+          japanese: "黄色",
+          english: "Yellow",
+          furigana: "きいろ",
+        },
+        {
+          japanese: "緑",
+          english: "Green",
+          furigana: "みどり",
+        },
+        {
+          japanese: "青",
+          english: "Blue",
+          furigana: "あお",
+        },
+        {
+          japanese: "紫",
+          english: "Purple",
+          furigana: "むらさき",
+        },
+        {
+          japanese: "桃色",
+          english: "Pink",
+          furigana: "ももいろ",
+        },
+        {
+          japanese: "茶色",
+          english: "Brown",
+          furigana: "ちゃいろ",
+        },
+        {
+          japanese: "灰色",
+          english: "Grey",
+          furigana: "はいいろ",
+        },
+        {
+          japanese: "黒",
+          english: "Black",
+          furigana: "くろ",
+        },
+        {
+          japanese: "白",
+          english: "White",
+          furigana: "しろ",
+        },
+        {
+          japanese: "色",
+          english: "Colour",
+          furigana: "いろ",
+        },
+      ],
+    },
+    {
+      id: 1,
+      title: "時間 ",
+      data: [
+        {
+          japanese: "時間",
+          english: "Time",
+          furigana: "じかん",
+        },
+        {
+          japanese: "年",
+          english: "Year",
+          furigana: "とし / ねん",
+        },
+        {
+          japanese: "月",
+          english: "Month",
+          furigana: "げつ / つき",
+        },
+        {
+          japanese: "日",
+          english: "Day",
+          furigana: "にち / ひ",
+        },
+        {
+          japanese: "今日",
+          english: "Today",
+          furigana: "きょう",
+        },
+        {
+          japanese: "明日",
+          english: "Tomorrow",
+          furigana: "あした",
+        },
+        {
+          japanese: "昨日",
+          english: "Yesterday",
+          furigana: "きのう",
+        },
+        {
+          japanese: "分",
+          english: "Minute",
+          furigana: "ふん / ぶん",
+        },
+        {
+          japanese: "時",
+          english: "Hour",
+          furigana: "じ / とき",
+        },
+      ],
+    },
+    {
+      id: 2,
+      title: "時間 ",
+      data: [
+        {
+          japanese: "時間",
+          english: "Time",
+          furigana: "じかん",
+        },
+        {
+          japanese: "年",
+          english: "Year",
+          furigana: "とし / ねん",
+        },
+        {
+          japanese: "月",
+          english: "Month",
+          furigana: "げつ / つき",
+        },
+        {
+          japanese: "日",
+          english: "Day",
+          furigana: "にち / ひ",
+        },
+        {
+          japanese: "今日",
+          english: "Today",
+          furigana: "きょう",
+        },
+        {
+          japanese: "明日",
+          english: "Tomorrow",
+          furigana: "あした",
+        },
+        {
+          japanese: "昨日",
+          english: "Yesterday",
+          furigana: "きのう",
+        },
+        {
+          japanese: "分",
+          english: "Minute",
+          furigana: "ふん / ぶん",
+        },
+        {
+          japanese: "時",
+          english: "Hour",
+          furigana: "じ / とき",
+        },
+      ],
+    },
+  ],
+};
 
-const katakana = [
-  {
-    id: 0,
-    title: "アイウエオ",
-    data: [
-      {
-        japanese: "ア",
-        english: "a",
-      },
-      {
-        japanese: "イ",
-        english: "i",
-      },
-      {
-        japanese: "ウ",
-        english: "u",
-      },
-      {
-        japanese: "エ",
-        english: "e",
-      },
-      {
-        japanese: "オ",
-        english: "o",
-      },
-    ],
-  },
-  {
-    id: 1,
-    title: "カキクケコ",
-    data: [
-      {
-        japanese: "カ",
-        english: "ka",
-      },
-      {
-        japanese: "キ",
-        english: "ki",
-      },
-      {
-        japanese: "ク",
-        english: "ku",
-      },
-      {
-        japanese: "ケ",
-        english: "ke",
-      },
-      {
-        japanese: "コ",
-        english: "ko",
-      },
-    ],
-  },
-  {
-    id: 2,
-    title: "サシスセソ",
-    data: [
-      {
-        japanese: "サ",
-        english: "sa",
-      },
-      {
-        japanese: "シ",
-        english: "shi",
-      },
-      {
-        japanese: "ス",
-        english: "su",
-      },
-      {
-        japanese: "セ",
-        english: "se",
-      },
-      {
-        japanese: "ソ",
-        english: "so",
-      },
-    ],
-  },
-  {
-    id: 3,
-    title: "タチツテト",
-    data: [
-      {
-        japanese: "タ",
-        english: "ta",
-      },
-      {
-        japanese: "チ",
-        english: "chi",
-      },
-      {
-        japanese: "ツ",
-        english: "tsu",
-      },
-      {
-        japanese: "テ",
-        english: "te",
-      },
-      {
-        japanese: "ト",
-        english: "to",
-      },
-    ],
-  },
-  {
-    id: 4,
-    title: "ナニヌネノ",
-    data: [
-      {
-        japanese: "ナ",
-        english: "ta",
-      },
-      {
-        japanese: "ニ",
-        english: "chi",
-      },
-      {
-        japanese: "ヌ",
-        english: "tsu",
-      },
-      {
-        japanese: "ネ",
-        english: "te",
-      },
-      {
-        japanese: "ノ",
-        english: "to",
-      },
-    ],
-  },
-  {
-    id: 4,
-    title: "ハヒフヘホ",
-    data: [
-      {
-        japanese: "ハ",
-        english: "ha",
-      },
-      {
-        japanese: "ヒ",
-        english: "hi",
-      },
-      {
-        japanese: "フ",
-        english: "fu",
-      },
-      {
-        japanese: "ヘ",
-        english: "he",
-      },
-      {
-        japanese: "ホ",
-        english: "ho",
-      },
-    ],
-  },
-  {
-    id: 5,
-    title: "マミムメモ",
-    data: [
-      {
-        japanese: "マ",
-        english: "ma",
-      },
-      {
-        japanese: "ミ",
-        english: "mi",
-      },
-      {
-        japanese: "ム",
-        english: "mu",
-      },
-      {
-        japanese: "メ",
-        english: "me",
-      },
-      {
-        japanese: "モ",
-        english: "mo",
-      },
-    ],
-  },
-  {
-    id: 6,
-    title: "ヤユヨ",
-    data: [
-      {
-        japanese: "ヤ",
-        english: "ya",
-      },
-      {
-        japanese: "ユ",
-        english: "yu",
-      },
-      {
-        japanese: "ヨ",
-        english: "yo",
-      },
-    ],
-  },
-  {
-    id: 7,
-    title: "ラリルレロ",
-    data: [
-      {
-        japanese: "ラ",
-        english: "ra",
-      },
-      {
-        japanese: "リ",
-        english: "ri",
-      },
-      {
-        japanese: "ル",
-        english: "ru",
-      },
-      {
-        japanese: "レ",
-        english: "re",
-      },
-      {
-        japanese: "ロ",
-        english: "ro",
-      },
-    ],
-  },
-  {
-    id: 8,
-    title: "ワオン",
-    data: [
-      {
-        japanese: "ワ",
-        english: "wa",
-      },
-      {
-        japanese: "オ",
-        english: "wo",
-      },
-      {
-        japanese: "ン",
-        english: "n",
-      },
-    ],
-  },
-];
+const katakana: Lessons = {
+  lessonData: [
+    {
+      id: 0,
+      title: "アイウエオ",
+      data: [
+        {
+          japanese: "ア",
+          english: "a",
+          furigana: "",
+        },
+        {
+          japanese: "イ",
+          english: "i",
+          furigana: "",
+        },
+        {
+          japanese: "ウ",
+          english: "u",
+          furigana: "",
+        },
+        {
+          japanese: "エ",
+          english: "e",
+          furigana: "",
+        },
+        {
+          japanese: "オ",
+          english: "o",
+          furigana: "",
+        },
+      ],
+    },
+    {
+      id: 1,
+      title: "カキクケコ",
+      data: [
+        {
+          japanese: "カ",
+          english: "ka",
+          furigana: "",
+        },
+        {
+          japanese: "キ",
+          english: "ki",
+          furigana: "",
+        },
+        {
+          japanese: "ク",
+          english: "ku",
+          furigana: "",
+        },
+        {
+          japanese: "ケ",
+          english: "ke",
+          furigana: "",
+        },
+        {
+          japanese: "コ",
+          english: "ko",
+          furigana: "",
+        },
+      ],
+    },
+    {
+      id: 2,
+      title: "サシスセソ",
+      data: [
+        {
+          japanese: "サ",
+          english: "sa",
+          furigana: "",
+        },
+        {
+          japanese: "シ",
+          english: "shi",
+          furigana: "",
+        },
+        {
+          japanese: "ス",
+          english: "su",
+          furigana: "",
+        },
+        {
+          japanese: "セ",
+          english: "se",
+          furigana: "",
+        },
+        {
+          japanese: "ソ",
+          english: "so",
+          furigana: "",
+        },
+      ],
+    },
+    {
+      id: 3,
+      title: "タチツテト",
+      data: [
+        {
+          japanese: "タ",
+          english: "ta",
+          furigana: "",
+        },
+        {
+          japanese: "チ",
+          english: "chi",
+          furigana: "",
+        },
+        {
+          japanese: "ツ",
+          english: "tsu",
+          furigana: "",
+        },
+        {
+          japanese: "テ",
+          english: "te",
+          furigana: "",
+        },
+        {
+          japanese: "ト",
+          english: "to",
+          furigana: "",
+        },
+      ],
+    },
+    {
+      id: 4,
+      title: "ナニヌネノ",
+      data: [
+        {
+          japanese: "ナ",
+          english: "ta",
+          furigana: "",
+        },
+        {
+          japanese: "ニ",
+          english: "chi",
+          furigana: "",
+        },
+        {
+          japanese: "ヌ",
+          english: "tsu",
+          furigana: "",
+        },
+        {
+          japanese: "ネ",
+          english: "te",
+          furigana: "",
+        },
+        {
+          japanese: "ノ",
+          english: "to",
+          furigana: "",
+        },
+      ],
+    },
+    {
+      id: 4,
+      title: "ハヒフヘホ",
+      data: [
+        {
+          japanese: "ハ",
+          english: "ha",
+          furigana: "",
+        },
+        {
+          japanese: "ヒ",
+          english: "hi",
+          furigana: "",
+        },
+        {
+          japanese: "フ",
+          english: "fu",
+          furigana: "",
+        },
+        {
+          japanese: "ヘ",
+          english: "he",
+          furigana: "",
+        },
+        {
+          japanese: "ホ",
+          english: "ho",
+          furigana: "",
+        },
+      ],
+    },
+    {
+      id: 5,
+      title: "マミムメモ",
+      data: [
+        {
+          japanese: "マ",
+          english: "ma",
+          furigana: "",
+        },
+        {
+          japanese: "ミ",
+          english: "mi",
+          furigana: "",
+        },
+        {
+          japanese: "ム",
+          english: "mu",
+          furigana: "",
+        },
+        {
+          japanese: "メ",
+          english: "me",
+          furigana: "",
+        },
+        {
+          japanese: "モ",
+          english: "mo",
+          furigana: "",
+        },
+      ],
+    },
+    {
+      id: 6,
+      title: "ヤユヨ",
+      data: [
+        {
+          japanese: "ヤ",
+          english: "ya",
+          furigana: "",
+        },
+        {
+          japanese: "ユ",
+          english: "yu",
+          furigana: "",
+        },
+        {
+          japanese: "ヨ",
+          english: "yo",
+          furigana: "",
+        },
+      ],
+    },
+    {
+      id: 7,
+      title: "ラリルレロ",
+      data: [
+        {
+          japanese: "ラ",
+          english: "ra",
+          furigana: "",
+        },
+        {
+          japanese: "リ",
+          english: "ri",
+          furigana: "",
+        },
+        {
+          japanese: "ル",
+          english: "ru",
+          furigana: "",
+        },
+        {
+          japanese: "レ",
+          english: "re",
+          furigana: "",
+        },
+        {
+          japanese: "ロ",
+          english: "ro",
+          furigana: "",
+        },
+      ],
+    },
+    {
+      id: 8,
+      title: "ワオン",
+      data: [
+        {
+          japanese: "ワ",
+          english: "wa",
+          furigana: "",
+        },
+        {
+          japanese: "オ",
+          english: "wo",
+          furigana: "",
+        },
+        {
+          japanese: "ン",
+          english: "n",
+          furigana: "",
+        },
+      ],
+    },
+  ],
+};
 
-const hiragana = [
-  {
-    id: 0,
-    title: "あいうえお",
-    data: [
-      {
-        japanese: "あ",
-        english: "a",
-      },
-      {
-        japanese: "い",
-        english: "i",
-      },
-      {
-        japanese: "う",
-        english: "u",
-      },
-      {
-        japanese: "え",
-        english: "e",
-      },
-      {
-        japanese: "お",
-        english: "o",
-      },
-    ],
-  },
-  {
-    id: 1,
-    title: "かきくけこ",
-    progress: "",
-    data: [
-      {
-        japanese: "か",
-        english: "ka",
-      },
-      {
-        japanese: "き",
-        english: "ki",
-      },
-      {
-        japanese: "く",
-        english: "ku",
-      },
-      {
-        japanese: "け",
-        english: "ke",
-      },
-      {
-        japanese: "こ",
-        english: "ko",
-      },
-    ],
-  },
-  {
-    id: 2,
-    title: "さしすせそ",
-    data: [
-      {
-        japanese: "さ",
-        english: "sa",
-      },
-      {
-        japanese: "し",
-        english: "shi",
-      },
-      {
-        japanese: "す",
-        english: "su",
-      },
-      {
-        japanese: "せ",
-        english: "se",
-      },
-      {
-        japanese: "そ",
-        english: "so",
-      },
-    ],
-  },
-  {
-    id: 3,
-    title: "たちつてと",
-    data: [
-      {
-        japanese: "た",
-        english: "ta",
-      },
-      {
-        japanese: "ち",
-        english: "ti",
-      },
-      {
-        japanese: "つ",
-        english: "tsu",
-      },
-      {
-        japanese: "て",
-        english: "te",
-      },
-      {
-        japanese: "と",
-        english: "to",
-      },
-    ],
-  },
-  {
-    id: 4,
-    title: "なにぬねの",
-    data: [
-      {
-        japanese: "な",
-        english: "na",
-      },
-      {
-        japanese: "に",
-        english: "ni",
-      },
-      {
-        japanese: "ぬ",
-        english: "nu",
-      },
-      {
-        japanese: "ね",
-        english: "ne",
-      },
-      {
-        japanese: "の",
-        english: "no",
-      },
-    ],
-  },
-  {
-    id: 5,
-    title: "はひふへほ",
-    data: [
-      {
-        japanese: "は",
-        english: "ha",
-      },
-      {
-        japanese: "ひ",
-        english: "hi",
-      },
-      {
-        japanese: "ふ",
-        english: "fu",
-      },
-      {
-        japanese: "へ",
-        english: "he",
-      },
-      {
-        japanese: "ほ",
-        english: "ho",
-      },
-    ],
-  },
-  {
-    id: 6,
-    title: "まみむめも",
-    data: [
-      {
-        japanese: "ま",
-        english: "ma",
-      },
-      {
-        japanese: "み",
-        english: "mi",
-      },
-      {
-        japanese: "む",
-        english: "mu",
-      },
-      {
-        japanese: "め",
-        english: "me",
-      },
-      {
-        japanese: "も",
-        english: "mo",
-      },
-    ],
-  },
-  {
-    id: 7,
-    title: "やゆよ",
-    data: [
-      {
-        japanese: "や",
-        english: "ya",
-      },
-      {
-        japanese: "ゆ",
-        english: "yu",
-      },
-      {
-        japanese: "よ",
-        english: "yo",
-      },
-    ],
-  },
-  {
-    id: 8,
-    title: "らりうれろ",
-    data: [
-      {
-        japanese: "ら",
-        english: "ra",
-      },
-      {
-        japanese: "り",
-        english: "ri",
-      },
-      {
-        japanese: "う",
-        english: "ru",
-      },
-      {
-        japanese: "れ",
-        english: "re",
-      },
-      {
-        japanese: "ろ",
-        english: "ro",
-      },
-    ],
-  },
-  {
-    id: 9,
-    title: "わをん",
-    data: [
-      {
-        japanese: "わ",
-        english: "wa",
-      },
-      {
-        japanese: "を",
-        english: "wo",
-      },
-      {
-        japanese: "ん",
-        english: "n",
-      },
-    ],
-  },
-];
+const hiragana: Lessons = {
+  lessonData: [
+    {
+      id: 0,
+      title: "あいうえお",
+      data: [
+        {
+          japanese: "あ",
+          english: "a",
+          furigana: "",
+        },
+        {
+          japanese: "い",
+          english: "i",
+          furigana: "",
+        },
+        {
+          japanese: "う",
+          english: "u",
+          furigana: "",
+        },
+        {
+          japanese: "え",
+          english: "e",
+          furigana: "",
+        },
+        {
+          japanese: "お",
+          english: "o",
+          furigana: "",
+        },
+      ],
+    },
+    {
+      id: 1,
+      title: "かきくけこ",
+      data: [
+        {
+          japanese: "か",
+          english: "ka",
+          furigana: "",
+        },
+        {
+          japanese: "き",
+          english: "ki",
+          furigana: "",
+        },
+        {
+          japanese: "く",
+          english: "ku",
+          furigana: "",
+        },
+        {
+          japanese: "け",
+          english: "ke",
+          furigana: "",
+        },
+        {
+          japanese: "こ",
+          english: "ko",
+          furigana: "",
+        },
+      ],
+    },
+    {
+      id: 2,
+      title: "さしすせそ",
+      data: [
+        {
+          japanese: "さ",
+          english: "sa",
+          furigana: "",
+        },
+        {
+          japanese: "し",
+          english: "shi",
+          furigana: "",
+        },
+        {
+          japanese: "す",
+          english: "su",
+          furigana: "",
+        },
+        {
+          japanese: "せ",
+          english: "se",
+          furigana: "",
+        },
+        {
+          japanese: "そ",
+          english: "so",
+          furigana: "",
+        },
+      ],
+    },
+    {
+      id: 3,
+      title: "たちつてと",
+      data: [
+        {
+          japanese: "た",
+          english: "ta",
+          furigana: "",
+        },
+        {
+          japanese: "ち",
+          english: "ti",
+          furigana: "",
+        },
+        {
+          japanese: "つ",
+          english: "tsu",
+          furigana: "",
+        },
+        {
+          japanese: "て",
+          english: "te",
+          furigana: "",
+        },
+        {
+          japanese: "と",
+          english: "to",
+          furigana: "",
+        },
+      ],
+    },
+    {
+      id: 4,
+      title: "なにぬねの",
+      data: [
+        {
+          japanese: "な",
+          english: "na",
+          furigana: "",
+        },
+        {
+          japanese: "に",
+          english: "ni",
+          furigana: "",
+        },
+        {
+          japanese: "ぬ",
+          english: "nu",
+          furigana: "",
+        },
+        {
+          japanese: "ね",
+          english: "ne",
+          furigana: "",
+        },
+        {
+          japanese: "の",
+          english: "no",
+          furigana: "",
+        },
+      ],
+    },
+    {
+      id: 5,
+      title: "はひふへほ",
+      data: [
+        {
+          japanese: "は",
+          english: "ha",
+          furigana: "",
+        },
+        {
+          japanese: "ひ",
+          english: "hi",
+          furigana: "",
+        },
+        {
+          japanese: "ふ",
+          english: "fu",
+          furigana: "",
+        },
+        {
+          japanese: "へ",
+          english: "he",
+          furigana: "",
+        },
+        {
+          japanese: "ほ",
+          english: "ho",
+          furigana: "",
+        },
+      ],
+    },
+    {
+      id: 6,
+      title: "まみむめも",
+      data: [
+        {
+          japanese: "ま",
+          english: "ma",
+          furigana: "",
+        },
+        {
+          japanese: "み",
+          english: "mi",
+          furigana: "",
+        },
+        {
+          japanese: "む",
+          english: "mu",
+          furigana: "",
+        },
+        {
+          japanese: "め",
+          english: "me",
+          furigana: "",
+        },
+        {
+          japanese: "も",
+          english: "mo",
+          furigana: "",
+        },
+      ],
+    },
+    {
+      id: 7,
+      title: "やゆよ",
+      data: [
+        {
+          japanese: "や",
+          english: "ya",
+          furigana: "",
+        },
+        {
+          japanese: "ゆ",
+          english: "yu",
+          furigana: "",
+        },
+        {
+          japanese: "よ",
+          english: "yo",
+          furigana: "",
+        },
+      ],
+    },
+    {
+      id: 8,
+      title: "らりうれろ",
+      data: [
+        {
+          japanese: "ら",
+          english: "ra",
+          furigana: "",
+        },
+        {
+          japanese: "り",
+          english: "ri",
+          furigana: "",
+        },
+        {
+          japanese: "う",
+          english: "ru",
+          furigana: "",
+        },
+        {
+          japanese: "れ",
+          english: "re",
+          furigana: "",
+        },
+        {
+          japanese: "ろ",
+          english: "ro",
+          furigana: "",
+        },
+      ],
+    },
+    {
+      id: 9,
+      title: "わをん",
+      data: [
+        {
+          japanese: "わ",
+          english: "wa",
+          furigana: "",
+        },
+        {
+          japanese: "を",
+          english: "wo",
+          furigana: "",
+        },
+        {
+          japanese: "ん",
+          english: "n",
+          furigana: "",
+        },
+      ],
+    },
+  ],
+};
 </script>

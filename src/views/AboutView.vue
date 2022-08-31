@@ -18,6 +18,7 @@ export default defineComponent({
       currentLesson: {
         japanese: "",
         english: "",
+        furigana: "",
       },
       lessonAttempt: "",
       lessonProgress: 0,

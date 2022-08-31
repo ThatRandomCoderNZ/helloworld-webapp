@@ -9,5 +9,5 @@ import LessonMenuCard from "./LessonMenuCard.vue";
 </script>
 
 <template>
-  <LessonMenuCard></LessonMenuCard>
+
 </template>
