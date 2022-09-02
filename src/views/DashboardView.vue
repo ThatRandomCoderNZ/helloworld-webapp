@@ -1,7 +1,10 @@
 <template>
   <header>
     <div class="logo-container">
-      <h1 class="logo-header">HelloWorld ︱こんにちは世界</h1>
+      <h1 class="logo-header">Hello World ︱こんにちは世界</h1>
+    </div>
+    <div class="profile-container" @click="handleSignOut">
+      Sign Out | サインアウト
     </div>
   </header>
   <main class="main-page">
@@ -28,15 +31,26 @@
 </template>
 
 <style>
+.profile-container {
+  color: white;
+  margin-right: 5vw;
+  cursor: pointer;
+}
+
+.profile-container:hover {
+  font-weight: bolder;
+}
+
 header {
   position: fixed;
   top: 0;
   left: 0;
   display: flex;
+  justify-content: space-between;
   align-items: center;
   box-shadow: 2px 2px #729e9e;
   min-height: 10vh;
-  width: 100%;
+  width: 100vw;
   background-color: #98d6d6;
   z-index: 100;
 }
@@ -64,6 +78,33 @@ header {
 <script setup lang="ts">
 import LessonMenuCard from "../components/LessonMenuCard.vue";
 import type { Lessons } from "@/components/LessonMenuCard.vue";
+import { onMounted } from "vue";
+import axios from "axios";
+import router from "@/router";
+
+const handleSignOut = () => {
+  router.push("/");
+};
+
+onMounted(() => {
+  // const token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0IiwiZXhwIjoxNjYyMDc2MDk4LCJpYXQiOjE2NjIwNTgwOTh9.i0is4oLuFyD-C5rmMMcDWbrSEu9kl0sYga8b7UVEdNSPiDmqnDjcXQ_ESyeBtAo5T_E9WdJfjXocq17fZjWNWg";
+  // const config = {
+  //   headers: { Authorization: `Bearer ${token}` }
+  // };
+  //
+
+  // axios({
+  //   method: "get",
+  //   url: "http://helloworldbackenddeploy-env.eba-xm7i59nj.us-west-1.elasticbeanstalk.com/numbers",
+  //   headers: {
+  //     "content-type": "text/plain",
+  //     Authorization:
+  //       "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0IiwiZXhwIjoxNjYyMDc2MDk4LCJpYXQiOjE2NjIwNTgwOTh9.i0is4oLuFyD-C5rmMMcDWbrSEu9kl0sYga8b7UVEdNSPiDmqnDjcXQ_ESyeBtAo5T_E9WdJfjXocq17fZjWNWg",
+  //   },
+  // }).then((response) => {
+  //   console.log(response);
+  //   });
+});
 
 const kanji: Lessons = {
   lessonData: [
