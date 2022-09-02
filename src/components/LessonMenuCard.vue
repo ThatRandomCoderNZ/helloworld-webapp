@@ -7,7 +7,11 @@
       @click="handleClick"
     >
       <div class="lesson-menu-card">
-        <h1 class="lesson-title">
+        <div :class="'extra-info-container ' + extraInfoAnim">
+          <h1 class="extra-info lesson-type">{{ lessonType }}</h1>
+          <h1 class="extra-info lesson-translation">{{ lessonTranslation }}</h1>
+        </div>
+        <h1 :class="'lesson-title ' + lessonTitleAnim">
           {{ lessonTitle }}
         </h1>
       </div>
@@ -29,6 +33,7 @@
           <h4 class="sub-lesson-title">
             {{ lesson.title }}
           </h4>
+          <div class="sub-progress-bar"></div>
         </div>
       </router-link>
     </div>
@@ -61,6 +66,8 @@ export default defineComponent({
     },
     id: Number,
     lessonTitle: String,
+    lessonTranslation: String,
+    lessonType: String,
   },
 
   data() {
@@ -83,6 +90,14 @@ export default defineComponent({
   computed: {
     lessonCardAnim() {
       return "lesson-card-anim-" + this.id;
+    },
+
+    extraInfoAnim() {
+      return "extra-info-anim-" + this.id;
+    },
+
+    lessonTitleAnim() {
+      return "lesson-title-anim-" + this.id;
     },
 
     subLessonAnim() {
@@ -118,6 +133,18 @@ export default defineComponent({
     enterHover() {
       if (!this.showMenu && !this.inImportantTransition) {
         this.bounce.pause();
+
+        gsap.to("." + this.lessonTitleAnim, {
+          y: 60,
+          duration: 0.5,
+        });
+
+        gsap.to("." + this.extraInfoAnim, {
+          opacity: 1,
+          duration: 0.3,
+          delay: 0.1,
+        });
+
         this.raise = gsap.to("." + this.lessonCardAnim, {
           scale: 1.05,
           duration: 0.2,
@@ -134,6 +161,16 @@ export default defineComponent({
           onComplete: () => {
             this.bounce.play();
           },
+        });
+
+        gsap.to("." + this.lessonTitleAnim, {
+          y: 0,
+          duration: 0.5,
+        });
+
+        gsap.to("." + this.extraInfoAnim, {
+          opacity: 0,
+          duration: 0.4,
         });
       }
     },
@@ -213,6 +250,35 @@ export default defineComponent({
 </script>
 
 <style>
+
+.extra-info {
+  font-weight: 200;
+  font-size: 40px;
+  text-align: center;
+}
+
+.lesson-translation {
+  font-size: 32px;
+}
+
+.lesson-type {
+  font-weight: 400;
+}
+
+
+
+.extra-info-container {
+  position: absolute;
+  color: white;
+  margin-bottom: 100px;
+  opacity: 0;
+}
+
+.extra-info-fade-in {
+  transition: opacity 1s;
+  opacity: 1;
+}
+
 .card {
   position: absolute;
   background-color: #98d6d6e6;
@@ -244,12 +310,17 @@ export default defineComponent({
   top: -40vh;
 }
 
+.divider {
+  opacity: 0;
+}
+
 .lesson-menu-card {
   background-color: #98d6d6;
   width: 300px;
   height: 300px;
   display: flex;
   align-items: center;
+  flex-direction: column;
   justify-content: center;
   border-radius: 20px;
   z-index: 10000;
@@ -314,9 +385,10 @@ export default defineComponent({
 }
 
 .sub-progress-bar {
+  position: absolute;
   width: 90px;
-  margin-top: 10px;
-  height: 10px;
+  margin-top: 110px;
+  height: 3px;
   background-color: #d9d9d9;
   border-radius: 5px;
 }

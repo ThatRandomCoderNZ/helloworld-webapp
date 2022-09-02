@@ -11,11 +11,15 @@
     <div class="lesson-container">
       <LessonMenuCard
         lessonTitle="ひらがな"
+        lesson-translation="Hiragana"
+        lesson-type="Alphabet"
         :lessons="hiragana"
         :id="1"
       ></LessonMenuCard>
       <LessonMenuCard
         lessonTitle="漢字"
+        lesson-type="Vocabulary I"
+        lesson-translation="Kanji"
         :lessons="kanji"
         :id="3"
       ></LessonMenuCard>
@@ -23,6 +27,8 @@
     <div class="lesson-container">
       <LessonMenuCard
         lessonTitle="カタカナ"
+        lesson-translation="Katakana"
+        lesson-type="Alphabet"
         :lessons="katakana"
         :id="2"
       ></LessonMenuCard>

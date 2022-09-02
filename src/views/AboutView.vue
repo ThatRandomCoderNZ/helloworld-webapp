@@ -130,9 +130,7 @@ export default defineComponent({
         ←
       </router-link>
 
-      <div class="reader-container" @click="toggleModal">
-        <div class="reader-image"></div>
-      </div>
+
     </div>
     <div class="center-content">
       <div class="main-lesson-container">
@@ -146,6 +144,9 @@ export default defineComponent({
           <h1 class="sub-title" v-if="currentLesson.furigana">
             {{ currentLesson.furigana }}
           </h1>
+        </div>
+        <div class="reader-container" @click="toggleModal">
+          <div class="reader-image"></div>
         </div>
         <div class="keyboard-container">
           <input
@@ -278,8 +279,26 @@ export default defineComponent({
   align-items: center;
 }
 
+.reader-container {
+  margin-top: 15vh;
+  height: 35px;
+  width: 35px;
+}
+
+.reader-container:hover {
+  cursor: pointer;
+}
+
+.reader-image {
+  background-image: url("../assets/read-book-icon.svg");
+  background-repeat: no-repeat;
+  width: 100%;
+  fill: blue;
+  height: 100%;
+}
+
 .keyboard-container {
-  margin-top: 20vh;
+  margin-top: 5vh;
   display: flex;
   align-items: center;
 }
@@ -333,21 +352,5 @@ textarea:focus {
   background: none;
 }
 
-.reader-container {
-  margin-top: 3vh;
-  height: 50px;
-  width: 50px;
-}
 
-.reader-container:hover {
-  cursor: pointer;
-}
-
-.reader-image {
-  background-image: url("../assets/read-book-icon.svg");
-  background-repeat: no-repeat;
-  width: 100%;
-  fill: blue;
-  height: 100%;
-}
 </style>

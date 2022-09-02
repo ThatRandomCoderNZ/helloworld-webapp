@@ -36,7 +36,11 @@ export default defineComponent({
     <h1 class="title">
       {{ title }}
     </h1>
+    <div></div>
   </div>
 </template>
 
-<style></style>
+<style>
+
+
+</style>

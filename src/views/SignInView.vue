@@ -15,7 +15,7 @@ export default {
     handleSubmit() {
       axios({
         method: "post",
-        url: "http://helloworldbackenddeploy-env.eba-xm7i59nj.us-west-1.elasticbeanstalk.com/authenticate",
+        url: "https://api.helloworldlearn.com/authenticate",
         data: {
           username: this.email,
           password: this.password,
