@@ -11,5 +11,8 @@
       "path": "./tsconfig.vitest.json"
     }
   ],
-  "module": "commonjs"
+  "module": "commonjs",
+  "compilerOptions": {
+    "allowJs": true,
+  }
 }
