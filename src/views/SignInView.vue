@@ -4,15 +4,38 @@ import router from "@/router";
 export default {
   name: "SignInView",
 
+  props: {
+    generalMessage: String,
+  },
+
   data() {
     return {
       email: "",
       password: "",
+      usernameError: "",
+      passwordError: "",
+      generalError: "",
     };
   },
 
   methods: {
+    validateForm() {
+      if (!this.email) {
+        this.usernameError = "You must enter an email";
+      }
+      if (!this.password) {
+        this.passwordError = "You must enter a password";
+      }
+      return !(this.usernameError || this.passwordError);
+    },
+
     handleSubmit() {
+      this.usernameError = "";
+      this.passwordError = "";
+      this.generalError = "";
+      if (!this.validateForm()) {
+        return;
+      }
       axios({
         method: "post",
         url: "https://api.helloworldlearn.com/authenticate",
@@ -26,7 +49,8 @@ export default {
           console.log(response);
           router.push("dashboard");
         })
-        .catch(() => {
+        .catch((response) => {
+          this.generalError = "There was something wrong with your username and/or password";
           this.email = "";
           this.password = "";
       });
@@ -44,20 +68,26 @@ export default {
         </router-link>
       </div>
       <div class="sign-in-title">
+        <h3 class="general-message">{{ generalMessage }}</h3>
         <h1>ログイン</h1>
         <h6>Sign in</h6>
       </div>
-      <div class="form">
+      <div class="form" @keyup.enter="handleSubmit">
         <div class="email-container">
-          <h5 class="email-header">Eメール | Email</h5>
-          <input class="email-entry sign-in-entry" type="text" v-model="email"/>
+          <h5 class="email-header">*Eメール | Email</h5>
+          <input :class="'email-entry sign-in-entry ' + ((usernameError) ? 'error-state':'')" type="text" v-model="email"/>
+          <h5 class="error-message">{{ usernameError }}</h5>
         </div>
         <div class="password-container">
-          <h5 class="password-header">パスワード | Password</h5>
-          <input class="password-entry sign-in-entry" type="password" v-model="password"/>
+          <h5 class="password-header">*パスワード | Password</h5>
+          <input :class="'password-entry sign-in-entry ' + ((passwordError) ? 'error-state':'')" type="password" v-model="password"/>
+          <h5 class="error-message">{{ passwordError }}</h5>
         </div>
         <div class="action-button-container">
-          <button class="sign-in-button" @click="handleSubmit">ログイン | Sign in</button>
+          <button class="sign-in-button" @click="handleSubmit">
+            ログイン | Sign in
+          </button>
+          <h5 class="error-message">{{ generalError }}</h5>
         </div>
       </div>
     </div>
@@ -65,10 +95,27 @@ export default {
 </template>
 
 <style scoped>
+
+.error-state {
+  border-color: rgba(221, 116, 116, 0.76) !important;
+}
+
+.general-message {
+  font-size: 22px;
+  color: #34c76f;
+}
+
+.error-message {
+  color: rgba(221, 116, 116, 0.76);
+  margin-left: 20px;
+  font-size: 12px;
+}
+
 .action-button-container {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
 }
 
 .sign-in-title {
