@@ -8,31 +8,34 @@
     </div>
   </header>
   <main class="main-page">
-    <div class="lesson-container">
-      <LessonMenuCard
-        lessonTitle="ひらがな"
-        lesson-translation="Hiragana"
-        lesson-type="Alphabet"
-        :lessons="hiragana"
-        :id="1"
-      ></LessonMenuCard>
-      <LessonMenuCard
-        lessonTitle="漢字"
-        lesson-type="Vocabulary I"
-        lesson-translation="Kanji"
-        :lessons="kanji"
-        :id="3"
-      ></LessonMenuCard>
-    </div>
-    <div class="lesson-container">
-      <LessonMenuCard
-        lessonTitle="カタカナ"
-        lesson-translation="Katakana"
-        lesson-type="Alphabet"
-        :lessons="katakana"
-        :id="2"
-      ></LessonMenuCard>
-    </div>
+
+
+<!--    <div class="lesson-container">-->
+<!--      <LessonMenuCard-->
+<!--        lessonTitle="ひらがな"-->
+<!--        lesson-translation="Hiragana"-->
+<!--        lesson-type="Alphabet"-->
+<!--        :lessons="hiragana"-->
+<!--        :id="1"-->
+<!--      ></LessonMenuCard>-->
+<!--      <LessonMenuCard-->
+<!--        lessonTitle="漢字"-->
+<!--        lesson-type="Vocabulary I"-->
+<!--        lesson-translation="Kanji"-->
+<!--        :lessons="kanji"-->
+<!--        :id="3"-->
+<!--      ></LessonMenuCard>-->
+<!--    </div>-->
+<!--    <div class="lesson-container">-->
+<!--      <LessonMenuCard-->
+<!--        lessonTitle="カタカナ"-->
+<!--        lesson-translation="Katakana"-->
+<!--        lesson-type="Alphabet"-->
+<!--        :lessons="katakana"-->
+<!--        :id="2"-->
+<!--      ></LessonMenuCard>-->
+<!--      -->
+<!--    </div>-->
   </main>
 </template>
 
@@ -820,58 +823,58 @@ const hiragana: Lessons = {
         },
       ],
     },
-    {
-      id: 8,
-      title: "らりうれろ",
-      data: [
-        {
-          japanese: "ら",
-          english: "ra",
-          furigana: "",
-        },
-        {
-          japanese: "り",
-          english: "ri",
-          furigana: "",
-        },
-        {
-          japanese: "う",
-          english: "ru",
-          furigana: "",
-        },
-        {
-          japanese: "れ",
-          english: "re",
-          furigana: "",
-        },
-        {
-          japanese: "ろ",
-          english: "ro",
-          furigana: "",
-        },
-      ],
-    },
-    {
-      id: 9,
-      title: "わをん",
-      data: [
-        {
-          japanese: "わ",
-          english: "wa",
-          furigana: "",
-        },
-        {
-          japanese: "を",
-          english: "wo",
-          furigana: "",
-        },
-        {
-          japanese: "ん",
-          english: "n",
-          furigana: "",
-        },
-      ],
-    },
+    // {
+    //   id: 8,
+    //   title: "らりうれろ",
+    //   data: [
+    //     {
+    //       japanese: "ら",
+    //       english: "ra",
+    //       furigana: "",
+    //     },
+    //     {
+    //       japanese: "り",
+    //       english: "ri",
+    //       furigana: "",
+    //     },
+    //     {
+    //       japanese: "う",
+    //       english: "ru",
+    //       furigana: "",
+    //     },
+    //     {
+    //       japanese: "れ",
+    //       english: "re",
+    //       furigana: "",
+    //     },
+    //     {
+    //       japanese: "ろ",
+    //       english: "ro",
+    //       furigana: "",
+    //     },
+    //   ],
+    // },
+    // {
+    //   id: 9,
+    //   title: "わをん",
+    //   data: [
+    //     {
+    //       japanese: "わ",
+    //       english: "wa",
+    //       furigana: "",
+    //     },
+    //     {
+    //       japanese: "を",
+    //       english: "wo",
+    //       furigana: "",
+    //     },
+    //     {
+    //       japanese: "ん",
+    //       english: "n",
+    //       furigana: "",
+    //     },
+    //   ],
+    // },
   ],
 };
 </script>

@@ -1,6 +1,7 @@
 <script>
 import axios from "axios";
 import router from "@/router";
+import { resolveRoute } from "@/helpers/api-routes";
 export default {
   name: "SignInView",
 
@@ -38,7 +39,7 @@ export default {
       }
       axios({
         method: "post",
-        url: "https://api.helloworldlearn.com/authenticate",
+        url: resolveRoute("authenticate"),
         data: {
           username: this.email,
           password: this.password,
