@@ -6,25 +6,63 @@
       </div>
     </div>
     <div class="section-lesson-groups-container">
-      <lesson-group main-title="Vocab I"></lesson-group>
-      <lesson-group main-title="Vocab II"></lesson-group>
-      <lesson-group main-title="Vocab III"></lesson-group>
-      <lesson-group main-title="Vocab IV"></lesson-group>
-      <lesson-group main-title="Vocab V"></lesson-group>
+      <lesson-group
+        v-for="group in groups"
+        :main-title="group.title"
+        :section-id="group.sectionId"
+        :key="group.sectionId"
+      ></lesson-group>
     </div>
   </div>
 </template>
 
 <script>
 import LessonGroup from "@/components/MenuItems/LessonGroup.vue";
+import { route } from "@/helpers/api-routes";
+import { useGlobalStore } from "@/stores/global";
 
 export default {
   name: "LessonSection",
   components: { LessonGroup },
 
+  setup() {
+    const global = useGlobalStore();
+
+    return {
+      global,
+    };
+  },
+
   props: {
     name: String,
     lessonNames: Array,
+    lessonId: Number,
+  },
+
+  watch: {
+    lessonId(newLessonId) {
+      route("get", `language/${newLessonId}/section`).then((result) => {
+        this.groups = result;
+        console.log(this.groups);
+      });
+    },
+  },
+
+  data() {
+    return {
+      groups: [],
+    };
+  },
+
+  mounted() {
+    console.log(this.global.languageId);
+    const id = !this.global.currentLanguageId
+      ? "2"
+      : this.global.currentLanguageId;
+    route("get", `language/${id}/section`).then((result) => {
+      this.groups = result;
+      console.log(this.groups);
+    });
   },
 };
 </script>

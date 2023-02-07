@@ -29,12 +29,31 @@ async function getToken() {
   return localStorage.getItem("token");
 }
 
-export const getApi = async (endpoint: string) => {
+async function refreshToken() {
+  localStorage.removeItem("token");
+  await reauthenticate();
+}
+
+export const route = async (
+  method: string,
+  endpoint: string,
+  body: unknown = {}
+) => {
   axios.defaults.headers.common = {
     Authorization: `Bearer ${await getToken()}`,
   };
-  axios({
-    method: "get",
+  return axios({
+    method: method,
     url: resolveRoute(endpoint),
-  });
+    data: body,
+  })
+    .then((response) => {
+      return response.data;
+    })
+    .catch(async (error) => {
+      if (error.response.status === 401) {
+        await refreshToken();
+        console.log(await route(method, endpoint));
+      }
+    });
 };

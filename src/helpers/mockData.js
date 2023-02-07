@@ -26,6 +26,20 @@ export const mockData = [
                 pronunciation: "Bu-eh-no",
                 foreignAlternative: "",
               },
+              {
+                id: 9,
+                foreignWord: "Hola",
+                nativeWord: "Hello",
+                pronunciation: "Oh-la",
+                foreignAlternative: "",
+              },
+              {
+                id: 10,
+                foreignWord: "Bueno/Bien",
+                nativeWord: "Good",
+                pronunciation: "Bu-eh-no",
+                foreignAlternative: "",
+              },
             ],
           },
           {

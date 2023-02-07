@@ -33,3 +33,7 @@
 /*    padding: 0 2rem;*/
 /*  }*/
 /*}*/
+
+.v-field__input {
+    background-color: white !important;
+}

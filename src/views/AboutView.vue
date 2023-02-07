@@ -2,41 +2,55 @@
 import { defineComponent, ref } from "vue";
 import router from "../router";
 import { gsap } from "gsap/dist/gsap";
-
+import { route } from "@/helpers/api-routes";
+import { useContentStore } from "@/stores/content";
 
 export default defineComponent({
+  setup() {
+    const store = useContentStore();
 
-  props: {
-    data: {
-      type: String,
-      required: true,
-    },
+    const userEntry = ref<HTMLInputElement>();
+    return {
+      store,
+      userEntry,
+    };
   },
 
   data() {
     return {
       currentLesson: {
-        japanese: "",
-        english: "",
-        furigana: "",
+        foreignWord: "",
+        nativeWord: "",
+        foreignAlternative: "",
+        id: "",
       },
+      data: [],
       lessonAttempt: "",
       lessonProgress: 0,
       lessonThreshold: 9,
       showModal: false,
+      questionTimer: 0,
     };
   },
 
   methods: {
     handleLesson() {
-      console.log(this.lessonAttempt.toLowerCase());
-      console.log(this.currentLesson.english.toLowerCase());
       if (
         this.lessonAttempt.toLowerCase() ===
-        this.currentLesson.english.toLowerCase()
+        this.currentLesson.nativeWord.toLowerCase()
       ) {
         this.lessonAttempt = "";
         this.lessonProgress += 1;
+        const timeTaken = (Date.now() - this.questionTimer) / 1000;
+        const progress =
+          timeTaken < 1
+            ? 100
+            : timeTaken > 10
+            ? 10
+            : 100 - Math.floor(timeTaken) * 10;
+        route("POST", `1/progress/${this.currentLesson.id}`, {
+          progress: progress,
+        });
         this.assignRandomLesson();
 
         const correct = gsap.to(".lesson-input", {
@@ -72,9 +86,18 @@ export default defineComponent({
 
     toggleModal() {
       this.showModal = !this.showModal;
+      if (!this.showModal) {
+        this.focusInput();
+      }
+    },
+
+    focusInput() {
+      this.userEntry?.focus();
     },
 
     assignRandomLesson() {
+      this.focusInput();
+      this.questionTimer = Date.now();
       const nextLesson = this.getRandomInt(this.lessonData.length);
       this.currentLesson = this.lessonData[nextLesson];
     },
@@ -84,14 +107,16 @@ export default defineComponent({
     },
   },
 
-  mounted() {
+  async mounted() {
+    const data = await route("get", "lesson/" + this.store.lessonId);
+    this.data = data.vocabulary;
     this.assignRandomLesson();
     (this.$refs.userEntry as InstanceType<typeof HTMLInputElement>).focus();
   },
 
   computed: {
     lessonData() {
-      return JSON.parse(this.data);
+      return this.data;
     },
 
     progress() {
@@ -99,9 +124,9 @@ export default defineComponent({
     },
 
     englishHint() {
-      return this.currentLesson.english.length > 1
-        ? "[ " + this.currentLesson.english + " ]"
-        : "[ " + this.currentLesson.english + " ]";
+      return this.currentLesson.native.length > 1
+        ? "[ " + this.currentLesson.native + " ]"
+        : "[ " + this.currentLesson.native + " ]";
     },
   },
 });
@@ -112,8 +137,12 @@ export default defineComponent({
     <div class="modal-content">
       <h3 class="modal-title">レッスン内容</h3>
       <div class="modal-description">
-        <div class="modal-lesson" v-for="lesson in lessonData" v-bind:key="lesson.id">
-          {{ lesson.japanese }} = {{ lesson.english }}
+        <div
+          class="modal-lesson"
+          v-for="lesson in lessonData"
+          v-bind:key="lesson.id"
+        >
+          {{ lesson.foreignWord }} = {{ lesson.nativeWord }}
         </div>
       </div>
       <button class="modal-button" @click="toggleModal">近い</button>
@@ -129,8 +158,6 @@ export default defineComponent({
       >
         ←
       </router-link>
-
-
     </div>
     <div class="center-content">
       <div class="main-lesson-container">
@@ -138,11 +165,11 @@ export default defineComponent({
           <div class="progress-fill" :style="{ width: progress }"></div>
         </div>
         <div class="main-title-container">
-          <h1 class="main-title">{{ currentLesson.japanese }}</h1>
+          <h1 class="main-title">{{ currentLesson.foreignWord }}</h1>
         </div>
         <div class="sub-title-container">
-          <h1 class="sub-title" v-if="currentLesson.furigana">
-            {{ currentLesson.furigana }}
+          <h1 class="sub-title" v-if="currentLesson.foreignAlternative">
+            {{ currentLesson.foreignAlternative }}
           </h1>
         </div>
         <div class="reader-container" @click="toggleModal">
@@ -259,8 +286,8 @@ export default defineComponent({
 }
 
 .main-title {
-  margin-top: 2vh;
-  font-size: 180px;
+  margin-top: 15vh;
+  font-size: 60px;
   color: #98d6d6;
   text-align: center;
   vertical-align: middle;
@@ -351,6 +378,4 @@ textarea:focus {
   font-size: 60px;
   background: none;
 }
-
-
 </style>

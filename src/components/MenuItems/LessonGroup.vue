@@ -8,11 +8,14 @@
         <h6 class="group-title-min">{{ mainTitle }}</h6>
       </div>
       <lesson-tile
-        v-for="i in [1, 2, 3, 4, 5, 6, 7, 8]"
-        v-bind:key="i"
-        :placement="i"
+        v-for="(lesson, index) in lessons"
+        v-bind:key="lesson.id"
+        :lesson-id="lesson.id"
+        :title="lesson.name"
+        :placement="(lessons.length + 0.1) * 0.1 - index * 0.1"
         :parentX="xPosition()"
         :parentY="yPosition()"
+        :progress="lesson.progress"
         :active="active"
         @retracted="handleMenuClose"
       />
@@ -23,23 +26,47 @@
 <script>
 import LessonTile from "@/components/MenuItems/LessonTile.vue";
 import { gsap } from "gsap/dist/gsap";
+import { route } from "@/helpers/api-routes";
+import { usePresentationStore } from "@/stores/presentation";
 
 export default {
   name: "LessonGroup",
   components: { LessonTile },
 
+  setup() {
+    const presentationStore = usePresentationStore();
+
+    return {
+      presentationStore,
+    };
+  },
+
   props: {
     mainTitle: String,
+    sectionId: Number,
   },
 
   data() {
     return {
       expanded: false,
       active: false,
+      lessonsData: [],
     };
   },
 
   computed: {
+    lessons() {
+      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+      return this.lessonsData.sort((first, second) => {
+        if (first.id < second.id) {
+          return -1;
+        } else if (first.id === second.id) {
+          return 0;
+        }
+        return 1;
+      });
+    },
+
     id() {
       return "group-" + this.mainTitle.split(" ").join("-");
     },
@@ -55,7 +82,7 @@ export default {
       gsap.to("#" + this.id, {
         scale: 0.37,
         x: -115,
-        y: -125,
+        y: -95,
         duration: 0.3,
         onComplete: () => {
           this.setExpansionState(true);
@@ -68,7 +95,7 @@ export default {
       gsap.to("#" + this.minimisedId, {
         scale: 2.72,
         x: 115,
-        y: 125,
+        y: 95,
         boxShadow: "none",
         duration: 0.5,
         onComplete: () => {
@@ -83,6 +110,7 @@ export default {
 
     setExpansionState(newState) {
       this.expanded = newState;
+      this.presentationStore.setExpansionState(this.id, newState);
     },
 
     xPosition() {
@@ -93,6 +121,42 @@ export default {
       return this.$refs["group-container"].getBoundingClientRect().y;
     },
   },
+
+  mounted() {
+    if (this.presentationStore.getExpansionState(this.id)) {
+      const state = this.presentationStore.getExpansionState(this.id);
+      if (state) {
+        this.minimise();
+      }
+    }
+
+    route("get", `section/${this.sectionId}/lesson`).then((result) => {
+      result.forEach(async (lesson) => {
+        const vocabIds = lesson.vocabulary.map((vocab) => {
+          return vocab.id;
+        });
+
+        route("get", `1/progress/grouped?wordIds=${vocabIds.join(",")}`).then(
+          (progressData) => {
+            let progress = 0;
+            if (progressData.length > 0) {
+              progress =
+                progressData
+                  .map((progressInfo) => {
+                    return progressInfo.progress;
+                  })
+                  .reduce((sum, value) => {
+                    return sum + value;
+                  }) / progressData.length;
+            }
+            lesson["progress"] = progress;
+            this.lessonsData.push(lesson);
+          }
+        );
+      });
+      console.log(this.lessonsData);
+    });
+  },
 };
 </script>
 
@@ -101,7 +165,7 @@ export default {
   width: 330px;
   height: 350px;
   display: flex;
-  align-items: center;
+  align-items: start;
   justify-content: center;
 }
 
@@ -112,6 +176,8 @@ export default {
   z-index: 10;
   display: flex;
   flex-direction: column;
+  text-align: center;
+  line-height: 70px;
   align-items: center;
   justify-content: center;
 }
@@ -125,6 +191,9 @@ export default {
   width: 110px;
   height: 110px;
   right: 5px;
+  position: relative;
+  text-align: center;
+  line-height: 25px;
   background-color: #9dcfcf;
   z-index: 10;
   display: flex;

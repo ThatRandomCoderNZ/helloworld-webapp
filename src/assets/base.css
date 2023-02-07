@@ -72,3 +72,13 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+.v-field__overlay {
+  background-color: white !important;
+  border: 3px solid #9dcfcf;
+  opacity: 1 !important;
+}
+
+.input.v-field__input {
+  background-color: white !important;
+}

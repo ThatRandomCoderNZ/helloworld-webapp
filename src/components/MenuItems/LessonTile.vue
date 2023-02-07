@@ -1,22 +1,38 @@
 <template>
-  <div :id="id" :ref="refId" class="lesson-container">
+  <div :id="id" :ref="refId" class="lesson-container" @click="navigateToLesson">
     <div class="lesson-tile">
-      <h6 class="lesson-title">はへふひほ</h6>
+      <h6 class="lesson-title">{{ title }}</h6>
     </div>
-    <div class="lesson-progress-bar"></div>
+    <div class="lesson-progress-bar">
+      <div class="progress-fill" :style="'width: ' + progressFill + '%'"></div>
+    </div>
   </div>
 </template>
 
 <script>
 import { gsap } from "gsap/dist/gsap";
+import router from "@/router";
+import { useContentStore } from "@/stores/content";
+
 export default {
   name: "LessonTile",
 
+  setup() {
+    const store = useContentStore();
+
+    return {
+      store,
+    };
+  },
+
   props: {
+    title: String,
+    lessonId: Number,
     placement: Number,
     parentX: Number,
     parentY: Number,
     active: Boolean,
+    progress: Number,
   },
 
   data() {
@@ -27,26 +43,41 @@ export default {
     };
   },
 
+  methods: {
+    navigateToLesson() {
+      this.store.setLesson(this.lessonId);
+      router.push("about");
+    },
+  },
+
   computed: {
     id() {
       return (
         "lesson-" +
+        this.lessonId +
+        "-" +
         Math.round(this.x) +
         "-" +
         Math.round(this.y) +
         "-" +
-        this.placement
+        Math.round(this.placement * 100)
       );
+    },
+
+    progressFill() {
+      return this.progress;
     },
 
     refId() {
       return (
         "unique-" +
+        this.lessonId +
+        "-" +
         Math.round(this.x) +
         "-" +
         Math.round(this.y) +
         "-" +
-        this.placement
+        Math.round(this.placement * 100)
       );
     },
 
@@ -64,6 +95,7 @@ export default {
       this.x = this.parentX;
       this.y = this.parentY;
     });
+    console.log(this.placement);
     gsap.to("#" + this.id, {
       x: this.xOffset,
       y: this.yOffset,
@@ -79,7 +111,7 @@ export default {
           duration: 0.3,
           opacity: 1,
           rotateY: 0,
-          delay: 1 - this.placement * 0.1,
+          delay: this.placement,
           onComplete: () => {
             this.showProgress = true;
           },
@@ -114,6 +146,7 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  text-align: center;
 }
 
 .lesson-tile:hover {
@@ -123,6 +156,7 @@ export default {
 
 .lesson-title {
   font-size: 16px;
+  color: white;
   vertical-align: center;
 }
 
@@ -140,5 +174,10 @@ export default {
   border: 1px solid #9dcfcf;
   border-radius: 20px;
   top: -2px;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: #9dcfcf;
 }
 </style>
