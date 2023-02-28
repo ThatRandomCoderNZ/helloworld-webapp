@@ -1,32 +1,34 @@
 <template>
   <div class="dashboard-container">
-    <div class="dashboard-header">
-      <LogoImage />
-    </div>
+    <app-header></app-header>
     <div class="main-dashboard-container">
-      <div class="language-selector">
-        <v-select
-          class="selector"
-          label="Language"
-          outlined
-          :items="selectableLanguages"
-          v-model="currentValue"
-          no-data-text="No Languages"
-        ></v-select>
+      <div class="slider-container">
+        <!-- Rounded switch -->
+        <label class="switch">
+          <input type="checkbox" v-model="this.switch" />
+          <span :class="sliderClasses"></span>
+        </label>
       </div>
       <lesson-section
-        name="Intro Vocab 1"
+        name="Basic Sentence Building Blocks"
         :lesson-id="global.currentLanguageId"
+        :filter-active="this.switch"
+        :difficulty="1"
+      ></lesson-section>
+      <lesson-section
+        name="Introduction to Verbs"
+        :lesson-id="global.currentLanguageId"
+        :filter-active="this.switch"
+        :difficulty="2"
       ></lesson-section>
     </div>
   </div>
 </template>
 
 <script>
-import LogoImage from "@/components/LogoImage.vue";
 import LessonSection from "@/components/MenuItems/LessonSection.vue";
-import { route } from "@/helpers/api-routes";
 import { useGlobalStore } from "@/stores/global";
+import AppHeader from "@/components/AppHeader.vue";
 
 export default {
   setup() {
@@ -38,47 +40,18 @@ export default {
   },
 
   name: "DashboardAlternative",
-  components: { LessonSection, LogoImage },
+  components: { AppHeader, LessonSection },
 
   data() {
     return {
-      currentValue: {},
-      languageData: [],
+      switch: false,
     };
   },
 
   computed: {
-    selectableLanguages() {
-      return this.languageData.map((language) => language.name);
+    sliderClasses() {
+      return "slider round " + this.global.currentLanguage.toLowerCase();
     },
-  },
-
-  methods: {
-    getLanguageNameForId(id) {
-      return this.languageData.find((language) => language.id === id).name;
-    },
-  },
-
-  watch: {
-    currentValue(newLanguage) {
-      const selectedLanguage = this.languageData.find(
-        (language) => language.name === newLanguage
-      );
-      this.global.setLanguageId(selectedLanguage.id);
-    },
-  },
-
-  mounted() {
-    route("GET", "language/plain").then((result) => {
-      this.languageData = result;
-      if (!this.global.currentLanguageId) {
-        this.currentValue = this.selectableLanguages[0];
-      } else {
-        this.currentValue = this.getLanguageNameForId(
-          this.global.currentLanguageId
-        );
-      }
-    });
   },
 };
 </script>
@@ -87,33 +60,79 @@ export default {
 .dashboard-container {
   width: 100%;
 }
-.dashboard-header {
-  width: 100%;
-  height: 10vh;
-  background-color: #9dcfcf;
 
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  align-items: center;
+.slider-container {
+  width: 100px;
+  position: relative;
+  margin: 5vh auto 0;
 }
 
-.selectable-menu-item {
-  color: white;
-  font-weight: bolder;
-  padding: 40px;
+/* SLIDER STYLING */
+
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
 }
 
-.selectable-menu-item:hover {
-  color: white;
-  border-bottom: 5px solid white;
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
   cursor: pointer;
-  line-height: 1px;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  /*background-image: url("../assets/english-countryside.svg");*/
+  background-color: #ccc;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
 }
 
-.selector {
-  width: 10vw;
-  margin-left: 100px;
-  margin-top: 30px;
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 34px;
+  width: 34px;
+  background-image: url("../assets/Asset 1.svg");
+  object-fit: contain;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+input:checked + .slider.spanish {
+  /*background-image: url("../assets/spanish-countryside.svg");*/
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(28px);
+  -ms-transform: translateX(28px);
+  transform: translateX(28px);
+}
+
+input:checked + .slider.spanish:before {
+  background-image: url("../assets/spanish-flag.svg");
+}
+
+input:checked + .slider.italian:before {
+  background-image: url("../assets/italian-flag.svg");
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
 }
 </style>

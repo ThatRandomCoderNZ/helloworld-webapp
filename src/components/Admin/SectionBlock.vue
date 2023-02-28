@@ -18,28 +18,44 @@
       @focusout="updateData"
     >
     </v-text-field>
-    <Delete
-      @click="deleteData"
-      style="width: 1.5em; height: 1.5em; align-self: end; color: white"
-    />
+    <v-text-field
+      class="editable-detail"
+      v-model="typeModel"
+      :hide-details="true"
+      @focusout="updateData"
+    ></v-text-field>
+    <div class="section-footer">
+      <DocumentAdd
+        @click="createOppositeSection"
+        style="width: 1.5em; height: 1.5em; align-self: end; color: white"
+      ></DocumentAdd>
+      <Delete
+        @click="deleteData"
+        style="width: 1.5em; height: 1.5em; align-self: end; color: white"
+      />
+    </div>
   </div>
 </template>
 
 <script>
 import { route } from "@/helpers/api-routes";
 import { Delete } from "@element-plus/icons-vue";
+import { DocumentAdd } from "@element-plus/icons-vue";
 
 export default {
   name: "SectionBlock",
 
   components: {
     Delete,
+    DocumentAdd,
   },
 
   props: {
     id: Number,
+    languageId: Number,
     name: String,
     difficulty: Number,
+    type: String,
     index: Number,
     activeSelection: Number,
   },
@@ -48,6 +64,7 @@ export default {
     return {
       nameModel: this.name,
       difficultyModel: this.difficulty,
+      typeModel: this.type,
     };
   },
 
@@ -57,6 +74,7 @@ export default {
         sectionId: this.id,
         title: this.nameModel,
         difficulty: this.difficultyModel,
+        type: this.typeModel,
       }).then(() => {
         this.$emit("updated");
       });
@@ -65,6 +83,13 @@ export default {
     deleteData() {
       route("delete", "section/" + this.id).then(() => {
         this.$emit("updated");
+      });
+    },
+
+    createOppositeSection() {
+      const url = `language/${this.languageId}/section/${this.id}/flipped`;
+      route("POST", url).then(() => {
+        console.log("success");
       });
     },
   },
@@ -142,5 +167,12 @@ export default {
 
 .editable-detail:deep(.v-field__outline::after) {
   border-style: none;
+}
+
+.section-footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 10px 15px;
 }
 </style>

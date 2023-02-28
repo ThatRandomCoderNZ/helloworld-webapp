@@ -13,6 +13,17 @@
               outlined
               :items="selectableLanguages"
               v-model="currentValue"
+              @change="doSomething"
+              no-data-text="No Languages"
+            ></v-select>
+          </div>
+          <div class="language-selector">
+            <v-select
+              class="selector"
+              label="Section Type"
+              outlined
+              :items="sectionTypes"
+              v-model="typeFilter"
               no-data-text="No Languages"
             ></v-select>
           </div>
@@ -23,7 +34,9 @@
               v-for="(section, index) in languages[currentLanguage]['sections']"
               :difficulty="section['difficulty']"
               :name="section['title']"
+              :language-id="languages[currentLanguage]['id']"
               :id="section['sectionId']"
+              :type="section['type']"
               :key="section['sectionId']"
               :active-selection="currentSection"
               :index="index"
@@ -114,6 +127,7 @@
                     'lessons'
                   ][currentLesson]['id']
                 "
+                @updated="sync"
               ></ImportBlock>
             </div>
           </div>
@@ -132,6 +146,7 @@ import VocabBlock from "@/components/Admin/VocabBlock.vue";
 import { route } from "@/helpers/api-routes";
 import AddBlock from "@/components/Admin/AddBlock.vue";
 import ImportBlock from "@/components/Admin/ImportBlock.vue";
+import _ from "lodash";
 
 export default {
   name: "AdminView",
@@ -146,11 +161,22 @@ export default {
 
   data() {
     return {
+      languageData: mockData,
       languages: mockData,
       currentSection: 0,
       currentLesson: 0,
       currentValue: "",
+      sectionTypes: ["NATIVE", "FOREIGN", "ALL"],
+      typeFilter: "ALL",
     };
+  },
+
+  watch: {
+    typeFilter(newTypeFilter) {
+      this.currentLesson = 0;
+      this.currentSection = 0;
+      this.applyFilter(newTypeFilter);
+    },
   },
 
   computed: {
@@ -158,6 +184,9 @@ export default {
       return this.languages.map((language) => {
         return language.name;
       });
+    },
+    languageDataConst() {
+      return this.languageData;
     },
 
     currentLanguage() {
@@ -172,6 +201,10 @@ export default {
   },
 
   methods: {
+    doSomething() {
+      console.log("something done");
+    },
+
     handleLanguageChange(newLanguage) {
       this.currentLanguage = new newLanguage();
       this.currentSection = 0;
@@ -187,13 +220,27 @@ export default {
       this.currentLesson = newLesson;
     },
 
+    applyFilter(filter) {
+      this.languages = _.cloneDeep(this.languageData).map((language) => {
+        language.sections = language.sections.filter((section) => {
+          if (filter === "ALL") {
+            return true;
+          }
+          return section.type === filter;
+        });
+        return language;
+      });
+    },
+
     async sync() {
-      this.languages = await route("get", "language");
+      this.languageData = await route("get", "language");
+      this.applyFilter(this.typeFilter);
     },
   },
 
   async mounted() {
     await this.sync();
+    this.languages = _.cloneDeep(this.languageDataConst);
     console.log(this.languages);
     this.currentValue = this.selectableLanguages[0];
   },
@@ -237,14 +284,9 @@ export default {
   display: flex;
   flex-direction: row;
   width: 100%;
-  height: 5vh;
+  height: 100%;
   background-color: #9dcfcf;
   padding-bottom: 10px;
-}
-
-.content-manager-header {
-  width: 100%;
-  height: 100%;
   border: solid 2px #9dcfcf;
 }
 

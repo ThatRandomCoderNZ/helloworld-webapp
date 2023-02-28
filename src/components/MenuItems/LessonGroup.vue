@@ -216,14 +216,18 @@ export default {
 }
 
 .group-title {
+  padding-left: 20px;
+  padding-right: 20px;
+  line-height: 49px;
   color: white;
-  font-size: 62px;
+  font-size: 49px;
   vertical-align: center;
 }
 
 .group-title-min {
   color: white;
-  font-size: 22px;
+  font-size: 18px;
+  line-height: 18px;
   vertical-align: center;
 }
 </style>

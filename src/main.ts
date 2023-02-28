@@ -13,6 +13,7 @@ const pinia = createPinia();
 loadFonts();
 
 app.component("DeleteIcon", ElementPlusIconsVue.Delete);
+app.component("MoreFilled", ElementPlusIconsVue.MoreFilled);
 app.use(router).use(pinia).use(vuetify);
 app.config.globalProperties.globalStore = useGlobalStore();
 

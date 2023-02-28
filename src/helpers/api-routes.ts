@@ -1,4 +1,6 @@
-import axios from "axios";
+import axios, { Axios } from "axios";
+
+import type { ResponseType } from "axios";
 
 export const resolveRoute = (endpoint: string) => {
   if (import.meta.env.MODE === "development") {
@@ -37,7 +39,8 @@ async function refreshToken() {
 export const route = async (
   method: string,
   endpoint: string,
-  body: unknown = {}
+  body: unknown = {},
+  responseType: ResponseType = "json"
 ) => {
   axios.defaults.headers.common = {
     Authorization: `Bearer ${await getToken()}`,
@@ -46,6 +49,7 @@ export const route = async (
     method: method,
     url: resolveRoute(endpoint),
     data: body,
+    responseType: responseType,
   })
     .then((response) => {
       return response.data;

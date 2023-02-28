@@ -28,7 +28,9 @@ export default {
             "POST",
             `section/${this.sectionId}/lesson/${this.lessonId}/vocab`,
             { foreignWord: question, nativeWord: answer }
-          );
+          ).then(() => {
+            this.$emit("updated");
+          });
         });
       };
       reader.readAsText(files[0]);

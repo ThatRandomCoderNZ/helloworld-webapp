@@ -3,18 +3,18 @@
     <div class="block-form-container">
       <div class="vocab-row">
         <div class="editable-block">
-          <p>Native:</p>
+          <p>Question:</p>
           <v-text-field
             class="editable-detail"
-            v-model="nativeWordModel"
+            v-model="foreignWordModel"
             :hide-details="true"
           ></v-text-field>
         </div>
         <div class="editable-block">
-          <p>Foreign:</p>
+          <p>Answer:</p>
           <v-text-field
             class="editable-detail"
-            v-model="foreignWordModel"
+            v-model="nativeWordModel"
             :hide-details="true"
           ></v-text-field>
         </div>

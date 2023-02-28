@@ -4,8 +4,11 @@ import router from "../router";
 import { gsap } from "gsap/dist/gsap";
 import { route } from "@/helpers/api-routes";
 import { useContentStore } from "@/stores/content";
+import SideReader from "@/components/SideReader.vue";
+import LessonHintInfo from "@/components/LessonHintInfo.vue";
 
 export default defineComponent({
+  components: { LessonHintInfo, SideReader },
   setup() {
     const store = useContentStore();
 
@@ -27,30 +30,41 @@ export default defineComponent({
       data: [],
       lessonAttempt: "",
       lessonProgress: 0,
-      lessonThreshold: 9,
-      showModal: false,
+      lessonThreshold: 0,
+      showHints: false,
       questionTimer: 0,
+      questionSequence: [0],
+      currentQuestion: -1,
     };
   },
 
   methods: {
     handleLesson() {
       if (
-        this.lessonAttempt.toLowerCase() ===
-        this.currentLesson.nativeWord.toLowerCase()
+        this.lessonAttempt.trim().toLowerCase() ===
+        this.currentLesson.nativeWord.trim().toLowerCase()
       ) {
         this.lessonAttempt = "";
         this.lessonProgress += 1;
         const timeTaken = (Date.now() - this.questionTimer) / 1000;
+        console.log(timeTaken);
+        const targetTime = Math.max(
+          this.currentLesson.nativeWord.length * 0.3,
+          2
+        );
         const progress =
-          timeTaken < 1
+          timeTaken <= targetTime
             ? 100
-            : timeTaken > 10
+            : timeTaken > 12
             ? 10
-            : 100 - Math.floor(timeTaken) * 10;
+            : 110 - Math.floor(timeTaken) * 10;
+        console.log("Progress", progress);
         route("POST", `1/progress/${this.currentLesson.id}`, {
           progress: progress,
         });
+        if (this.lessonProgress >= this.lessonThreshold) {
+          router.push({ name: "home" });
+        }
         this.assignRandomLesson();
 
         const correct = gsap.to(".lesson-input", {
@@ -78,15 +92,11 @@ export default defineComponent({
           },
         });
       }
-
-      if (this.lessonProgress > this.lessonThreshold) {
-        router.push({ name: "home" });
-      }
     },
 
     toggleModal() {
-      this.showModal = !this.showModal;
-      if (!this.showModal) {
+      this.showHints = !this.showHints;
+      if (!this.showHints) {
         this.focusInput();
       }
     },
@@ -98,8 +108,25 @@ export default defineComponent({
     assignRandomLesson() {
       this.focusInput();
       this.questionTimer = Date.now();
-      const nextLesson = this.getRandomInt(this.lessonData.length);
+      const nextLesson = this.getNextLesson();
       this.currentLesson = this.lessonData[nextLesson];
+    },
+
+    getNextLesson() {
+      this.currentQuestion++;
+      return this.questionSequence[this.currentQuestion];
+    },
+
+    createRandomQuestionSequence() {
+      const questionRange = [...Array(this.data.length).keys()];
+      return this.shuffle(questionRange);
+    },
+
+    shuffle(data: Array<number>) {
+      return data
+        .map((value) => ({ value, sort: Math.random() }))
+        .sort((a, b) => a.sort - b.sort)
+        .map(({ value }) => value);
     },
 
     getRandomInt(max: number) {
@@ -109,7 +136,14 @@ export default defineComponent({
 
   async mounted() {
     const data = await route("get", "lesson/" + this.store.lessonId);
+    route("get", `${1}/progress/lesson/${this.store.lessonId}`).then(
+      (result) => {
+        this.showHints = result.length != data.vocabulary.length;
+      }
+    );
     this.data = data.vocabulary;
+    this.lessonThreshold = this.data.length;
+    this.questionSequence = this.createRandomQuestionSequence();
     this.assignRandomLesson();
     (this.$refs.userEntry as InstanceType<typeof HTMLInputElement>).focus();
   },
@@ -120,7 +154,7 @@ export default defineComponent({
     },
 
     progress() {
-      return this.lessonProgress * 10 + "%";
+      return (this.lessonProgress / this.lessonThreshold) * 100 + "%";
     },
 
     englishHint() {
@@ -133,21 +167,23 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="reader-modal" v-if="showModal">
-    <div class="modal-content">
-      <h3 class="modal-title">レッスン内容</h3>
-      <div class="modal-description">
-        <div
-          class="modal-lesson"
-          v-for="lesson in lessonData"
-          v-bind:key="lesson.id"
-        >
-          {{ lesson.foreignWord }} = {{ lesson.nativeWord }}
-        </div>
-      </div>
-      <button class="modal-button" @click="toggleModal">近い</button>
-    </div>
-  </div>
+  <SideReader :force-display="showHints">
+    <lesson-hint-info :lesson-data="lessonData" />
+  </SideReader>
+  <!--  <div class="reader-modal" v-if="showHints">-->
+  <!--    <div class="modal-content">-->
+  <!--      <div class="modal-description">-->
+  <!--        <div-->
+  <!--          class="modal-lesson"-->
+  <!--          v-for="lesson in lessonData"-->
+  <!--          v-bind:key="lesson.id"-->
+  <!--        >-->
+  <!--          {{ lesson.foreignWord }} = {{ lesson.nativeWord }}-->
+  <!--        </div>-->
+  <!--      </div>-->
+  <!--      <button class="modal-button" @click="toggleModal">Close</button>-->
+  <!--    </div>-->
+  <!--  </div>-->
   <div class="lesson-page">
     <div class="header-bar">
       <router-link
@@ -158,12 +194,13 @@ export default defineComponent({
       >
         ←
       </router-link>
+      <div class="progress-bar">
+        <div class="progress-fill" :style="{ width: progress }"></div>
+      </div>
+      <div></div>
     </div>
     <div class="center-content">
       <div class="main-lesson-container">
-        <div class="progress-bar">
-          <div class="progress-fill" :style="{ width: progress }"></div>
-        </div>
         <div class="main-title-container">
           <h1 class="main-title">{{ currentLesson.foreignWord }}</h1>
         </div>
@@ -172,9 +209,7 @@ export default defineComponent({
             {{ currentLesson.foreignAlternative }}
           </h1>
         </div>
-        <div class="reader-container" @click="toggleModal">
-          <div class="reader-image"></div>
-        </div>
+
         <div class="keyboard-container">
           <input
             v-model="lessonAttempt"
@@ -190,71 +225,10 @@ export default defineComponent({
 </template>
 
 <style>
-.modal-title {
-  color: #98d6d6;
-  font-size: 72px;
-
-  border-bottom: 1px solid #98d6d6;
-  margin-bottom: 5vh;
-}
-
-.modal-button {
-  color: white;
-  background-color: #98d6d6;
-  border: none;
-  font-size: 24px;
-  width: 300px;
-  height: 60px;
-  border-radius: 20px;
-}
-
-.modal-button:hover {
-  cursor: pointer;
-  box-shadow: 1px 1px #8ba0b8;
-}
-
-.modal-description {
-  width: 80%;
-  height: 60%;
-  margin-bottom: 5vh;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.modal-lesson {
-  font-size: 24px;
-  color: #84b7b7;
-  margin-top: 5px;
-  margin-bottom: 5px;
-}
-
-.modal-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 50vw;
-  height: 45vw;
-  background-color: rgb(255, 255, 255);
-  border-radius: 10px;
-}
-
-.reader-modal {
-  position: fixed;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  z-index: 1000;
-  left: 0;
-  top: 0;
-  background-color: rgba(80, 80, 80, 0.582);
-}
-
 .progress-bar {
-  width: 100%;
+  position: relative;
+  width: 60%;
+  right: 30px;
   height: 10px;
   background-color: rgb(235, 234, 234);
   display: flex;
@@ -286,7 +260,7 @@ export default defineComponent({
 }
 
 .main-title {
-  margin-top: 15vh;
+  margin-top: 20vh;
   font-size: 60px;
   color: #98d6d6;
   text-align: center;
@@ -325,7 +299,7 @@ export default defineComponent({
 }
 
 .keyboard-container {
-  margin-top: 5vh;
+  margin-top: 20vh;
   display: flex;
   align-items: center;
 }
@@ -372,6 +346,7 @@ textarea:focus {
 .back-link {
   font-size: 60px;
   color: #98d6d6;
+  text-decoration: none;
 }
 
 .back-link:hover {
