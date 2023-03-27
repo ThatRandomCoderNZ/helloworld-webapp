@@ -52,6 +52,7 @@
         type="text"
         v-model="answer"
         @keyup.enter="handleTextInput"
+        @keyup="handleInput"
       />
     </div>
   </div>
@@ -87,6 +88,7 @@ export default {
       answer: "",
       accuracyColor: "green",
       accuracyScore: 0,
+      lastKey: "",
     };
   },
 
@@ -96,7 +98,15 @@ export default {
       return moods[randomIndex];
     },
 
+    handleInput(e) {
+      this.lastKey = e.key;
+    },
+
     handleTextInput() {
+      if (this.lastKey !== "Enter") {
+        return;
+      }
+
       const message = this.answer;
       route(
         "get",
