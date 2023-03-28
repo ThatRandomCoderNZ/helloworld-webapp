@@ -1,11 +1,11 @@
 import { createApp } from "vue";
 import App from "./App.vue";
 import router from "./router";
-import vuetify from "./plugins/vuetify";
-import { loadFonts } from "./plugins/webfontloader";
+import vuetify from "@/plugins/vuetify";
+import { loadFonts } from "@/plugins/webfontloader";
 import * as ElementPlusIconsVue from "@element-plus/icons-vue";
 import { createPinia } from "pinia";
-import { useGlobalStore } from "./stores/global";
+import { useGlobalStore } from "@/stores/global";
 
 const app = createApp(App);
 const pinia = createPinia();
