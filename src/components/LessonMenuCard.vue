@@ -44,8 +44,6 @@
 import { gsap } from "gsap/dist/gsap";
 import { defineComponent, type PropType } from "vue";
 
-
-
 export interface Lessons {
   lessonData: {
     id: number;
@@ -159,7 +157,7 @@ export default defineComponent({
           duration: 0.4,
           ease: "power1.out",
           onComplete: () => {
-            this.bounce.play();
+            //this.bounce.play();
           },
         });
 
@@ -176,7 +174,7 @@ export default defineComponent({
     },
     handleMenuClosedFinish() {
       this.inImportantTransition = false;
-      this.bounce.play(0);
+      //this.bounce.play(0);
       this.showMenu = false;
     },
 
@@ -220,6 +218,7 @@ export default defineComponent({
       repeat: -1,
       duration: 1,
       yoyo: true,
+      paused: true,
     });
     this.elevateMenu = gsap.to("." + this.lessonCardAnim, {
       x: this.menuPositionX,
@@ -250,7 +249,6 @@ export default defineComponent({
 </script>
 
 <style>
-
 .extra-info {
   font-weight: 200;
   font-size: 40px;
@@ -264,8 +262,6 @@ export default defineComponent({
 .lesson-type {
   font-weight: 400;
 }
-
-
 
 .extra-info-container {
   position: absolute;
@@ -322,7 +318,7 @@ export default defineComponent({
   align-items: center;
   flex-direction: column;
   justify-content: center;
-  border-radius: 20px;
+  border-radius: 0px;
   z-index: 10000;
   /* animation-name: pulse;
     animation-duration: 5s;

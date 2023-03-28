@@ -1,6 +1,8 @@
 <script>
 import axios from "axios";
 import router from "@/router";
+import { resolveRoute } from "@/helpers/api-routes";
+
 export default {
   name: "SignUpView",
 
@@ -42,7 +44,7 @@ export default {
       }
       axios({
         method: "post",
-        url: "https://api.helloworldlearn.com/register",
+        url: resolveRoute("register"),
         data: {
           username: this.email,
           password: this.password,
@@ -51,7 +53,7 @@ export default {
       })
         .then((response) => {
           console.log(response);
-          router.push({ name: 'signin', params: {generalMessage: "You've successfuly signed up! Login in now to get started." }});
+          router.push({ name: 'signin', params: {generalMessage: "You've successfully signed up! Login in now to get started." }});
         })
         .catch((response) => {
           this.generalError = "There was something wrong with your username and/or password";
