@@ -38,19 +38,23 @@ export const loginUser = async (
   username: string,
   password: string
 ): Promise<accessResponse | null> => {
-  const response = await axios({
-    method: "post",
-    url: resolveRoute("login"),
-    data: {
-      username: username,
-      password: password,
-    },
-    withCredentials: false,
-  });
+  try {
+    const response = await axios({
+      method: "post",
+      url: resolveRoute("login"),
+      data: {
+        username: username,
+        password: password,
+      },
+      withCredentials: false,
+    });
 
-  if (response.status == 200) {
-    return response.data;
-  } else return null;
+    if (response.status == 200) {
+      return response.data;
+    } else return null;
+  } catch (e) {
+    return null;
+  }
 };
 
 export const loginState = (): string | null => {
