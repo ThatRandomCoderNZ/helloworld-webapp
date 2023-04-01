@@ -120,7 +120,6 @@ export default {
           this.cookies.set(
             "userUuid",
             accessResponse.userUuid,
-            "0",
             remember ? -1 : "0"
           );
           this.cookies.set("username", this.email, remember ? -1 : "0");
