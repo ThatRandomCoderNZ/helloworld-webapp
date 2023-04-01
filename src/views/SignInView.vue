@@ -100,8 +100,6 @@ export default {
     },
 
     handleSubmit() {
-      router.push("dashboard");
-      console.log("should pushed");
       this.usernameError = "";
       this.passwordError = "";
       this.generalError = "";
