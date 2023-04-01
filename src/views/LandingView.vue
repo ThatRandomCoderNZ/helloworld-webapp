@@ -404,13 +404,13 @@ export default defineComponent({
   }
 
   .registration-container {
-    margin-bottom: 10px;
+    margin-bottom: 5vh;
   }
 
   .landing-button {
     width: 200px;
     height: 60px;
-    margin-bottom: 50px;
+    margin-bottom: 20vh;
     font-size: 18px;
   }
 }

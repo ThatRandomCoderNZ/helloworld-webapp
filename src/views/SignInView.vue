@@ -9,7 +9,7 @@
         </router-link>
       </div>
       <div class="sign-in-title">
-        <h4 class="general-message">{{ generalMessage }}</h4>
+        <h5 class="general-message">{{ generalMessage }}</h5>
         <h3>Login</h3>
       </div>
       <div class="sign-in-link-container">
@@ -169,7 +169,7 @@ export default {
 }
 
 .general-message {
-  font-size: 22px;
+  font-size: 18px;
   color: #34c76f;
 }
 
