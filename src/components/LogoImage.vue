@@ -29,11 +29,18 @@ export default {
 
 <style scoped>
 .logo-image {
-  background-image: url("../assets/equals-logo.svg");
+  background-image: url("../assets/logo-color-sub.svg");
   background-repeat: no-repeat;
   object-fit: contain;
-  margin-top: 25px;
   width: 100px;
   height: 50px;
+}
+
+@media screen and (max-width: 600px) {
+  .logo-image {
+    height: 80px;
+    width: 60px;
+    margin-top: 45px;
+  }
 }
 </style>

@@ -1,9 +1,68 @@
+<template>
+  <SideReader :force-display="showHints">
+    <lesson-hint-info :lesson-data="lessonData" />
+  </SideReader>
+  <!--  <div class="reader-modal" v-if="showHints">-->
+  <!--    <div class="modal-content">-->
+  <!--      <div class="modal-description">-->
+  <!--        <div-->
+  <!--          class="modal-lesson"-->
+  <!--          v-for="lesson in lessonData"-->
+  <!--          v-bind:key="lesson.id"-->
+  <!--        >-->
+  <!--          {{ lesson.foreignWord }} = {{ lesson.nativeWord }}-->
+  <!--        </div>-->
+  <!--      </div>-->
+  <!--      <button class="modal-button" @click="toggleModal">Close</button>-->
+  <!--    </div>-->
+  <!--  </div>-->
+  <div class="lesson-page">
+    <div class="header-bar">
+      <router-link
+        class="back-link"
+        :to="{
+          name: 'home',
+        }"
+      >
+        ←
+      </router-link>
+      <div class="progress-bar">
+        <div class="progress-fill" :style="{ width: progress }"></div>
+      </div>
+      <div></div>
+    </div>
+    <div class="center-content">
+      <div class="main-lesson-container">
+        <div class="main-title-container">
+          <h1 class="main-title">{{ currentLesson.foreignWord }}</h1>
+        </div>
+        <div class="sub-title-container">
+          <h1 class="sub-title" v-if="currentLesson.foreignAlternative">
+            {{ currentLesson.foreignAlternative }}
+          </h1>
+        </div>
+
+        <div class="keyboard-container">
+          <input
+            v-model="lessonAttempt"
+            @keyup.enter="handleLesson"
+            class="lesson-input"
+            type="text"
+            ref="userEntry"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
 <script lang="ts">
 import { defineComponent, ref } from "vue";
-import router from "../router";
+import router from "@/router";
 import { gsap } from "gsap/dist/gsap";
 import { route } from "@/helpers/api-routes";
 import { useContentStore } from "@/stores/content";
+import { useUserStore } from "@/stores/user";
 import SideReader from "@/components/SideReader.vue";
 import LessonHintInfo from "@/components/LessonHintInfo.vue";
 
@@ -11,11 +70,13 @@ export default defineComponent({
   components: { LessonHintInfo, SideReader },
   setup() {
     const store = useContentStore();
+    const user = useUserStore();
 
     const userEntry = ref<HTMLInputElement>();
     return {
       store,
       userEntry,
+      user,
     };
   },
 
@@ -59,9 +120,13 @@ export default defineComponent({
             ? 10
             : 110 - Math.floor(timeTaken) * 10;
         console.log("Progress", progress);
-        route("POST", `1/progress/${this.currentLesson.id}`, {
-          progress: progress,
-        });
+        route(
+          "POST",
+          `${this.user.getUserUuid}/progress/${this.currentLesson.id}`,
+          {
+            progress: progress,
+          }
+        );
         if (this.lessonProgress >= this.lessonThreshold) {
           router.push({ name: "home" });
         }
@@ -136,11 +201,12 @@ export default defineComponent({
 
   async mounted() {
     const data = await route("get", "lesson/" + this.store.lessonId);
-    route("get", `${1}/progress/lesson/${this.store.lessonId}`).then(
-      (result) => {
-        this.showHints = result.length != data.vocabulary.length;
-      }
-    );
+    route(
+      "get",
+      `${this.user.getUserUuid}/progress/lesson/${this.store.lessonId}`
+    ).then((result) => {
+      this.showHints = result.length != data.vocabulary.length;
+    });
     this.data = data.vocabulary;
     this.lessonThreshold = this.data.length;
     this.questionSequence = this.createRandomQuestionSequence();
@@ -157,72 +223,14 @@ export default defineComponent({
       return (this.lessonProgress / this.lessonThreshold) * 100 + "%";
     },
 
-    englishHint() {
-      return this.currentLesson.native.length > 1
-        ? "[ " + this.currentLesson.native + " ]"
-        : "[ " + this.currentLesson.native + " ]";
-    },
+    // englishHint() {
+    //   return this.currentLesson.native.length > 1
+    //     ? "[ " + this.currentLesson.native + " ]"
+    //     : "[ " + this.currentLesson.native + " ]";
+    // },
   },
 });
 </script>
-
-<template>
-  <SideReader :force-display="showHints">
-    <lesson-hint-info :lesson-data="lessonData" />
-  </SideReader>
-  <!--  <div class="reader-modal" v-if="showHints">-->
-  <!--    <div class="modal-content">-->
-  <!--      <div class="modal-description">-->
-  <!--        <div-->
-  <!--          class="modal-lesson"-->
-  <!--          v-for="lesson in lessonData"-->
-  <!--          v-bind:key="lesson.id"-->
-  <!--        >-->
-  <!--          {{ lesson.foreignWord }} = {{ lesson.nativeWord }}-->
-  <!--        </div>-->
-  <!--      </div>-->
-  <!--      <button class="modal-button" @click="toggleModal">Close</button>-->
-  <!--    </div>-->
-  <!--  </div>-->
-  <div class="lesson-page">
-    <div class="header-bar">
-      <router-link
-        class="back-link"
-        :to="{
-          name: 'home',
-        }"
-      >
-        ←
-      </router-link>
-      <div class="progress-bar">
-        <div class="progress-fill" :style="{ width: progress }"></div>
-      </div>
-      <div></div>
-    </div>
-    <div class="center-content">
-      <div class="main-lesson-container">
-        <div class="main-title-container">
-          <h1 class="main-title">{{ currentLesson.foreignWord }}</h1>
-        </div>
-        <div class="sub-title-container">
-          <h1 class="sub-title" v-if="currentLesson.foreignAlternative">
-            {{ currentLesson.foreignAlternative }}
-          </h1>
-        </div>
-
-        <div class="keyboard-container">
-          <input
-            v-model="lessonAttempt"
-            @keyup.enter="handleLesson"
-            class="lesson-input"
-            type="text"
-            ref="userEntry"
-          />
-        </div>
-      </div>
-    </div>
-  </div>
-</template>
 
 <style>
 .progress-bar {

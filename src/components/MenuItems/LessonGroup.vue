@@ -28,6 +28,7 @@ import LessonTile from "@/components/MenuItems/LessonTile.vue";
 import { gsap } from "gsap/dist/gsap";
 import { route } from "@/helpers/api-routes";
 import { usePresentationStore } from "@/stores/presentation";
+import { useUserStore } from "@/stores/user";
 
 export default {
   name: "LessonGroup",
@@ -35,9 +36,11 @@ export default {
 
   setup() {
     const presentationStore = usePresentationStore();
+    const userStore = useUserStore();
 
     return {
       presentationStore,
+      userStore,
     };
   },
 
@@ -136,23 +139,26 @@ export default {
           return vocab.id;
         });
 
-        route("get", `1/progress/grouped?wordIds=${vocabIds.join(",")}`).then(
-          (progressData) => {
-            let progress = 0;
-            if (progressData.length > 0) {
-              progress =
-                progressData
-                  .map((progressInfo) => {
-                    return progressInfo.progress;
-                  })
-                  .reduce((sum, value) => {
-                    return sum + value;
-                  }) / progressData.length;
-            }
-            lesson["progress"] = progress;
-            this.lessonsData.push(lesson);
+        route(
+          "get",
+          `${
+            this.userStore.getUserUuid
+          }/progress/grouped?wordIds=${vocabIds.join(",")}`
+        ).then((progressData) => {
+          let progress = 0;
+          if (progressData.length > 0) {
+            progress =
+              progressData
+                .map((progressInfo) => {
+                  return progressInfo.progress;
+                })
+                .reduce((sum, value) => {
+                  return sum + value;
+                }) / progressData.length;
           }
-        );
+          lesson["progress"] = progress;
+          this.lessonsData.push(lesson);
+        });
       });
       console.log(this.lessonsData);
     });

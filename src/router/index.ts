@@ -10,6 +10,13 @@ import ChatView from "@/views/ChatView.vue";
 import AdminGrammarView from "@/views/AdminGrammarView.vue";
 import GrammarMenuView from "@/views/GrammarMenuView.vue";
 import GrammarToolView from "@/views/GrammarToolView.vue";
+import {
+  checkAdminAccess,
+  loginState,
+  route,
+  userIsLoggedIn,
+} from "@/helpers/api-routes";
+import type { App } from "vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -69,6 +76,33 @@ const router = createRouter({
       component: ChatView,
     },
   ],
+});
+
+router.beforeEach(async (to, from) => {
+  console.log("Triggered");
+  const { $cookies } = router.$app.config.globalProperties;
+
+  if (
+    // make sure the user is authenticated
+    !userIsLoggedIn($cookies) &&
+    to.name !== "signin" &&
+    to.name !== "signup" &&
+    to.name !== "landing"
+  ) {
+    // redirect the user to the login page
+    return { name: "signin" };
+  }
+
+  if (userIsLoggedIn($cookies) && to.name == "landing") {
+    return { name: "home" };
+  }
+
+  if (to.path.startsWith("/admin")) {
+    const hasAdminAccess = await checkAdminAccess($cookies);
+    if (!hasAdminAccess) {
+      return { name: from.name ?? "home" };
+    }
+  }
 });
 
 export default router;

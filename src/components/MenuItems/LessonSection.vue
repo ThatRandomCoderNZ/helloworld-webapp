@@ -101,7 +101,7 @@ export default {
 }
 .section-title {
   position: relative;
-  left: 45px;
+  left: 4vw;
   margin-top: 4vh;
 }
 
@@ -111,13 +111,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-@media only screen and (max-width: 600px) {
-  .lesson-section {
-    padding-left: 6vw;
-    width: 100%;
-  }
+  justify-content: center;
 }
 
 .section-lesson-groups-container {
@@ -128,7 +122,25 @@ export default {
   width: 100%;
   flex-direction: row;
   flex-wrap: wrap;
+  align-items: center;
   column-gap: 40px;
   row-gap: 70px;
+}
+
+@media only screen and (max-width: 600px) {
+  .lesson-section {
+    position: relative;
+    width: 95%;
+  }
+
+  .section-title {
+    left: 20px;
+  }
+
+  .section-lesson-groups-container {
+    margin: auto auto;
+    justify-content: center;
+    column-gap: 0;
+  }
 }
 </style>

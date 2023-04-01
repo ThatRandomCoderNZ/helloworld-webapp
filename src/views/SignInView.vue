@@ -1,9 +1,78 @@
+<template>
+  <div class="container-override">
+    <div class="sign-in-page">
+      <div class="homepage-link">
+        <router-link class="link" to="/">
+          <div class="landing-logo-container">
+            <div class="logo-image"></div>
+          </div>
+        </router-link>
+      </div>
+      <div class="sign-in-title">
+        <h4 class="general-message">{{ generalMessage }}</h4>
+        <h3>Login</h3>
+      </div>
+      <div class="sign-in-link-container">
+        <p class="sign-in-link">
+          Don't have an account yet?
+          <router-link class="link" to="/signup"
+            >Click here to sign up</router-link
+          >
+        </p>
+      </div>
+      <div class="form" @keyup.enter="handleSubmit">
+        <div class="email-container">
+          <h5 class="email-header">Email</h5>
+          <input
+            :class="
+              'email-entry sign-in-entry ' +
+              (usernameError ? 'error-state' : '')
+            "
+            type="text"
+            v-model="email"
+          />
+          <h5 class="error-message">{{ usernameError }}</h5>
+        </div>
+        <div class="password-container">
+          <h5 class="password-header">Password</h5>
+          <input
+            :class="
+              'password-entry sign-in-entry ' +
+              (passwordError ? 'error-state' : '')
+            "
+            type="password"
+            v-model="password"
+          />
+          <h5 class="error-message">{{ passwordError }}</h5>
+        </div>
+        <div class="action-button-container">
+          <button class="sign-in-button" @click="handleSubmit">LOGIN</button>
+          <h5 class="error-message">{{ generalError }}</h5>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
 <script>
 import axios from "axios";
 import router from "@/router";
-import { resolveRoute } from "@/helpers/api-routes";
+import { loginUser, resolveRoute, userIsLoggedIn } from "@/helpers/api-routes";
+import { VueCookies } from "vue-cookies";
+import { inject } from "vue";
+import { useUserStore } from "@/stores/user";
 export default {
   name: "SignInView",
+
+  setup() {
+    const cookies = inject("$cookies");
+    const userStore = useUserStore();
+
+    return {
+      cookies,
+      userStore,
+    };
+  },
 
   props: {
     generalMessage: String,
@@ -31,71 +100,71 @@ export default {
     },
 
     handleSubmit() {
+      router.push("dashboard");
+      console.log("should pushed");
       this.usernameError = "";
       this.passwordError = "";
       this.generalError = "";
       if (!this.validateForm()) {
         return;
       }
-      axios({
-        method: "post",
-        url: resolveRoute("authenticate"),
-        data: {
-          username: this.email,
-          password: this.password,
-        },
-        withCredentials: false,
-      })
-        .then((response) => {
-          console.log(response);
+
+      const remember = false;
+      loginUser(this.email, this.password).then((accessResponse) => {
+        if (accessResponse) {
+          console.log(accessResponse);
+          this.cookies.set(
+            "accessToken",
+            accessResponse.accessToken,
+            remember ? -1 : "0"
+          );
+          this.cookies.set("remainLoggedIn", remember);
+          this.cookies.set(
+            "userUuid",
+            accessResponse.userUuid,
+            "0",
+            remember ? -1 : "0"
+          );
+          this.cookies.set("username", this.email, remember ? -1 : "0");
+
+          // this.userStore.setUserUuid(accessResponse.userUuid);
+          // this.userStore.setAccessToken(accessResponse.accessToken);
+          // this.userStore.setUsername(this.email);
+
           router.push("dashboard");
-        })
-        .catch((response) => {
-          this.generalError = "There was something wrong with your username and/or password";
+        } else {
+          this.generalError =
+            "There was something wrong with your username and/or password";
           this.email = "";
           this.password = "";
+        }
       });
-    }
-  }
+    },
+  },
 };
 </script>
 
-<template>
-  <div class="container-override">
-    <div class="sign-in-page">
-      <div class="homepage-link">
-        <router-link class="link" to="/">
-          キャンセル | Cancel
-        </router-link>
-      </div>
-      <div class="sign-in-title">
-        <h3 class="general-message">{{ generalMessage }}</h3>
-        <h1>ログイン</h1>
-        <h6>Sign in</h6>
-      </div>
-      <div class="form" @keyup.enter="handleSubmit">
-        <div class="email-container">
-          <h5 class="email-header">*Eメール | Email</h5>
-          <input :class="'email-entry sign-in-entry ' + ((usernameError) ? 'error-state':'')" type="text" v-model="email"/>
-          <h5 class="error-message">{{ usernameError }}</h5>
-        </div>
-        <div class="password-container">
-          <h5 class="password-header">*パスワード | Password</h5>
-          <input :class="'password-entry sign-in-entry ' + ((passwordError) ? 'error-state':'')" type="password" v-model="password"/>
-          <h5 class="error-message">{{ passwordError }}</h5>
-        </div>
-        <div class="action-button-container">
-          <button class="sign-in-button" @click="handleSubmit">
-            ログイン | Sign in
-          </button>
-          <h5 class="error-message">{{ generalError }}</h5>
-        </div>
-      </div>
-    </div>
-  </div>
-</template>
-
 <style scoped>
+.sign-in-link-container {
+  font-size: 12px;
+  margin-bottom: 20px;
+}
+.logo-image {
+  background-image: url("../assets/logo-color-sub.svg");
+  background-repeat: no-repeat;
+  object-fit: contain;
+  margin-top: 25px;
+  margin-left: 50px;
+  width: 100px;
+  height: 60px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
 
 .error-state {
   border-color: rgba(221, 116, 116, 0.76) !important;
@@ -124,7 +193,8 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-bottom: 10vh;
+  margin-top: 10vh;
+  margin-bottom: 2vh;
 }
 
 .password-container {
@@ -136,24 +206,24 @@ export default {
   background-color: #98d6d6;
   border: none;
   color: white;
-  width: 300px;
-  height: 75px;
+  width: 250px;
+  height: 60px;
   font-size: 18px;
-  border-radius: 10px;
+  border-radius: 2px;
   cursor: pointer;
 }
 
 .sign-in-button:hover {
-  box-shadow: 1px 1px #6da8a8;
+  box-shadow: 2px 2px 2px #6da8a8;
 }
 
 .sign-in-entry {
-  width: 488px;
+  width: 400px;
   height: 60px;
   line-height: 40px;
   outline: #98d6d6;
   border: 1px solid #98d6d6;
-  border-radius: 10px;
+  border-radius: 2px;
   inset: unset;
   caret-color: #98d6d6;
   font-size: 16px;
@@ -198,5 +268,20 @@ export default {
   align-items: center;
   justify-content: center;
   color: #a2dada;
+}
+
+@media screen and (max-width: 600px) {
+  .logo-image {
+    margin-top: 15px;
+    width: 80px;
+    height: 40px;
+    margin-left: 15px;
+  }
+
+  .sign-in-entry {
+    width: 200px;
+    height: 40px;
+    font-size: 12px;
+  }
 }
 </style>

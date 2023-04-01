@@ -61,10 +61,18 @@ export default {
   width: 100%;
 }
 
+.main-dashboard-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
 .slider-container {
   width: 100px;
+  margin-top: 40px;
+  margin-left: 10px;
   position: relative;
-  margin: 5vh auto 0;
 }
 
 /* SLIDER STYLING */

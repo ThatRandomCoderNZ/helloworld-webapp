@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard-header">
     <div class="dashboard-logo-container">
-      <LogoImage />
+      <router-link to="dashboard"> <LogoImage /></router-link>
     </div>
     <div class="language-selector">
       <v-select
@@ -11,13 +11,18 @@
         no-data-text="No Languages"
       ></v-select>
     </div>
+    <div class="logout-container" @click="logout">
+      <a>Logout</a>
+    </div>
   </div>
 </template>
 
 <script>
 import { useGlobalStore } from "@/stores/global";
 import LogoImage from "@/components/LogoImage.vue";
-import { route } from "@/helpers/api-routes";
+import { logoutUser, route } from "@/helpers/api-routes";
+import router from "@/router";
+import { inject } from "vue";
 
 export default {
   name: "AppHeader",
@@ -25,9 +30,11 @@ export default {
 
   setup() {
     const global = useGlobalStore();
+    const cookies = inject("$cookies");
 
     return {
       global,
+      cookies,
     };
   },
 
@@ -52,6 +59,11 @@ export default {
   methods: {
     getLanguageNameForId(id) {
       return this.languageData.find((language) => language.id === id).name;
+    },
+
+    logout() {
+      logoutUser(this.cookies);
+      router.push({ name: "landing" });
     },
   },
 
@@ -83,7 +95,7 @@ export default {
 <style scoped>
 .dashboard-header {
   width: 100%;
-  height: 10vh;
+  height: 75px;
   padding-left: 4vw;
   padding-right: 8vw;
   box-shadow: 0 -5px 20px #d9d9d9;
@@ -112,11 +124,29 @@ export default {
 
 .selector {
   width: 150px;
-  margin-left: 100px;
-  margin-top: 30px;
+  margin-top: 20px;
 }
 
 .selector:deep(.v-input__control .v-field .v-field__overlay) {
+  padding: 0;
   background: none !important;
+}
+
+.selector:deep(.v-field--variant-filled .v-field__outline::before) {
+  border-style: none;
+}
+
+.logout-container {
+  cursor: pointer;
+}
+
+@media screen and (max-width: 600px) {
+  .dashboard-header {
+    height: 50px;
+  }
+
+  .selector {
+    margin-top: 20px;
+  }
 }
 </style>

@@ -1,3 +1,60 @@
+<template>
+  <div class="landing-page">
+    <div class="landing-header">
+      <div class="landing-logo-container">
+        <div class="logo-image"></div>
+      </div>
+      <div
+        :class="
+          'lesson-details-container ' + (transitionDetails ? 'fading' : '')
+        "
+      >
+        <!--        <div-->
+        <!--          v-for="word in wordBank"-->
+        <!--          :key="word.id"-->
+        <!--          :class="-->
+        <!--            'landing-word-display ' +-->
+        <!--            (word.id < correctWords ? 'strike' : 'no-strike-through')-->
+        <!--          "-->
+        <!--        >-->
+        <!--          {{ word.japanese }} = {{ word.english }}-->
+        <!--        </div>-->
+      </div>
+      <!--      <div v-else class="lesson-details-container">-->
+      <!--        <div v-for="word in wordBank"-->
+      <!--             :key="word.id"-->
+      <!--             :class="'landing-word-display ' + ((word.id < currentWordIndex) ? 'strike':'no-strike-through') ">-->
+      <!--          {{ word.japanese }} = {{ word.english }}-->
+      <!--        </div>-->
+      <!--      </div>-->
+    </div>
+
+    <div class="main-landing-content">
+      <div class="animated-centerpiece">
+        <div
+          :class="
+            'foreign-text-guesser ' +
+            (transitionForeign
+              ? 'success-fade'
+              : '' + (transitionDetails ? ' hide' : ''))
+          "
+        >
+          <h4>{{ currentWords.japanese }}</h4>
+        </div>
+        <div class="native-text-guesser">
+          <h4 ref="native-guesser">excited</h4>
+        </div>
+      </div>
+
+      <div class="registration-container">
+        <button class="landing-button sign-in" @click="handleSignIn">
+          <p>Get Started</p>
+        </button>
+      </div>
+    </div>
+  </div>
+</template>
+
 <script>
 import { defineComponent } from "vue";
 
@@ -64,18 +121,23 @@ export default defineComponent({
         },
         {
           id: 3,
-          japanese: "今",
-          english: "now",
+          japanese: "する ",
+          english: "to do",
         },
         {
           id: 4,
-          japanese: "車",
-          english: "car",
+          japanese: "Bonjour",
+          english: "hello",
         },
         {
           id: 5,
-          japanese: "する ",
+          japanese: "Faire",
           english: "to do",
+        },
+        {
+          id: 6,
+          japanese: "Souvent",
+          english: "often",
         },
       ],
     };
@@ -120,20 +182,20 @@ export default defineComponent({
               this.wordBank = this.secondaryBank;
               this.secondaryBank = temp;
               resolve();
-            }, 3000);
+            }, 1500);
           } else {
             resolve();
           }
         }, 1000);
-      })
+      });
     },
 
-    handleSignUp(){
-      router.push({name: "signup"});
+    handleSignUp() {
+      router.push({ name: "signup" });
     },
 
-    handleSignIn(){
-      router.push({name: "signin"});
+    handleSignIn() {
+      router.push({ name: "signup" });
     },
 
     handleTypingShift() {
@@ -150,58 +212,16 @@ export default defineComponent({
 });
 </script>
 
-<template>
-  <div class="landing-page">
-    <div class="landing-header">
-      <div class="landing-logo-container">
-        <h3 class="main-landing-title">Hello World</h3>
-        <h6 class="main-landing-subtitle">Language Learning</h6>
-      </div>
-      <div :class="'lesson-details-container ' + ((transitionDetails ? 'fading':''))">
-        <div v-for="word in wordBank"
-             :key="word.id"
-             :class="'landing-word-display ' + ((word.id < correctWords) ? 'strike':'no-strike-through') ">
-          {{ word.japanese }} = {{ word.english }}
-        </div>
-      </div>
-<!--      <div v-else class="lesson-details-container">-->
-<!--        <div v-for="word in wordBank"-->
-<!--             :key="word.id"-->
-<!--             :class="'landing-word-display ' + ((word.id < currentWordIndex) ? 'strike':'no-strike-through') ">-->
-<!--          {{ word.japanese }} = {{ word.english }}-->
-<!--        </div>-->
-<!--      </div>-->
-    </div>
-
-    <div class="main-landing-content">
-      <div class="animated-centerpiece">
-        <div :class="'foreign-text-guesser ' + ((transitionForeign) ? 'success-fade':'' + ((transitionDetails) ? ' hide':''))">
-          <h4>{{ currentWords.japanese }}</h4>
-        </div>
-        <div class="native-text-guesser">
-          <h4 ref="native-guesser">excited</h4>
-        </div>
-      </div>
-
-      <div class="registration-container">
-        <div class="sign-in-container">
-          <button class="landing-button sign-in" @click="handleSignIn">
-            <p>Sign In</p>
-            <p>ログイン</p>
-          </button>
-        </div>
-        <div class="sign-up-container">
-          <button class="landing-button sign-up" @click="handleSignUp">
-            <p>Sign Up</p>
-            <p>サインアップ</p>
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</template>
-
 <style scoped>
+.logo-image {
+  background-image: url("../assets/logo-just-white-sub.svg");
+  background-repeat: no-repeat;
+  object-fit: contain;
+  margin-top: 25px;
+  width: 100px;
+  height: 60px;
+}
+
 .landing-page {
   color: white;
   display: flex;
@@ -264,17 +284,19 @@ export default defineComponent({
   color: #befad6;
 }
 
-
-
-@keyframes strike{
-  0%   { width : 0; }
-  100% { width: 100%; }
+@keyframes strike {
+  0% {
+    width: 0;
+  }
+  100% {
+    width: 100%;
+  }
 }
 .strike {
   position: relative;
 }
 .strike::after {
-  content: ' ';
+  content: " ";
   position: absolute;
   top: 50%;
   left: 0;
@@ -301,7 +323,7 @@ export default defineComponent({
 }
 .main-landing-content {
   width: 100%;
-  height: 80vh;
+  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -309,14 +331,12 @@ export default defineComponent({
 }
 
 .animated-centerpiece {
-  margin-top: 5vh;
+  margin-top: 15vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 }
-
-
 
 .native-text-guesser {
   margin-top: 5vh;
@@ -333,34 +353,65 @@ export default defineComponent({
   margin-bottom: 10vh;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
-  width: 30vw;
+  justify-content: center;
+  width: 80vw;
 }
 
 .landing-button {
-  width: 150px;
+  width: 300px;
   height: 75px;
-  border: white solid 1px;
+  border: white solid 3px;
   fill: none;
   color: white;
   background-color: transparent;
-  border-radius: 10px;
+  border-radius: 2px;
+  font-weight: bold;
   cursor: pointer;
-  font-size: 18px;
+  font-size: 22px;
 }
 .landing-button:hover {
-  border: white solid 2px;
+  border: white solid 4px;
   fill: none;
   color: white;
-  font-weight: bold;
   background-color: transparent;
+  box-shadow: 2px 2px 2px grey;
 }
-
 
 .no-strike-through {
   text-decoration: none;
 }
 .strike-through {
   text-decoration: line-through;
+}
+
+@media screen and (max-width: 600px) {
+  .logo-image {
+    margin-top: 10px;
+    width: 80px;
+    height: 40px;
+  }
+
+  .animated-centerpiece {
+    margin-top: 25vh;
+  }
+
+  .foreign-text-guesser {
+    font-size: 32px;
+  }
+
+  .native-text-guesser {
+    font-size: 24px;
+  }
+
+  .registration-container {
+    margin-bottom: 10px;
+  }
+
+  .landing-button {
+    width: 200px;
+    height: 60px;
+    margin-bottom: 50px;
+    font-size: 18px;
+  }
 }
 </style>

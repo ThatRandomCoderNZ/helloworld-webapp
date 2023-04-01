@@ -8,34 +8,32 @@
     </div>
   </header>
   <main class="main-page">
-
-
-<!--    <div class="lesson-container">-->
-<!--      <LessonMenuCard-->
-<!--        lessonTitle="ひらがな"-->
-<!--        lesson-translation="Hiragana"-->
-<!--        lesson-type="Alphabet"-->
-<!--        :lessons="hiragana"-->
-<!--        :id="1"-->
-<!--      ></LessonMenuCard>-->
-<!--      <LessonMenuCard-->
-<!--        lessonTitle="漢字"-->
-<!--        lesson-type="Vocabulary I"-->
-<!--        lesson-translation="Kanji"-->
-<!--        :lessons="kanji"-->
-<!--        :id="3"-->
-<!--      ></LessonMenuCard>-->
-<!--    </div>-->
-<!--    <div class="lesson-container">-->
-<!--      <LessonMenuCard-->
-<!--        lessonTitle="カタカナ"-->
-<!--        lesson-translation="Katakana"-->
-<!--        lesson-type="Alphabet"-->
-<!--        :lessons="katakana"-->
-<!--        :id="2"-->
-<!--      ></LessonMenuCard>-->
-<!--      -->
-<!--    </div>-->
+    <!--    <div class="lesson-container">-->
+    <!--      <LessonMenuCard-->
+    <!--        lessonTitle="ひらがな"-->
+    <!--        lesson-translation="Hiragana"-->
+    <!--        lesson-type="Alphabet"-->
+    <!--        :lessons="hiragana"-->
+    <!--        :id="1"-->
+    <!--      ></LessonMenuCard>-->
+    <!--      <LessonMenuCard-->
+    <!--        lessonTitle="漢字"-->
+    <!--        lesson-type="Vocabulary I"-->
+    <!--        lesson-translation="Kanji"-->
+    <!--        :lessons="kanji"-->
+    <!--        :id="3"-->
+    <!--      ></LessonMenuCard>-->
+    <!--    </div>-->
+    <!--    <div class="lesson-container">-->
+    <!--      <LessonMenuCard-->
+    <!--        lessonTitle="カタカナ"-->
+    <!--        lesson-translation="Katakana"-->
+    <!--        lesson-type="Alphabet"-->
+    <!--        :lessons="katakana"-->
+    <!--        :id="2"-->
+    <!--      ></LessonMenuCard>-->
+    <!--      -->
+    <!--    </div>-->
   </main>
 </template>
 
@@ -101,7 +99,6 @@ onMounted(() => {
   //   headers: { Authorization: `Bearer ${token}` }
   // };
   //
-
   // axios({
   //   method: "get",
   //   url: "http://helloworldbackenddeploy-env.eba-xm7i59nj.us-west-1.elasticbeanstalk.com/numbers",

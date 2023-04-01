@@ -1,7 +1,8 @@
 import { createApp } from "vue";
 import App from "./App.vue";
-import router from "./router";
+import router from "@/router";
 import vuetify from "@/plugins/vuetify";
+import VueCookies from "vue-cookies";
 import { loadFonts } from "@/plugins/webfontloader";
 import * as ElementPlusIconsVue from "@element-plus/icons-vue";
 import { createPinia } from "pinia";
@@ -14,7 +15,8 @@ loadFonts();
 
 app.component("DeleteIcon", ElementPlusIconsVue.Delete);
 app.component("MoreFilled", ElementPlusIconsVue.MoreFilled);
-app.use(router).use(pinia).use(vuetify);
+app.use(router).use(pinia).use(vuetify).use(VueCookies);
+router.$app = app;
 app.config.globalProperties.globalStore = useGlobalStore();
 
 app.mount("#app");
