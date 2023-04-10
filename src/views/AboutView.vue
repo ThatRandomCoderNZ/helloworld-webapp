@@ -160,29 +160,30 @@ export default defineComponent({
     },
 
     handlePlay(wordToPlay: string) {
-      if (this.isMuted || this.playSound) {
-        return;
-      }
-      this.playSound = true;
-      route(
-        "POST",
-        `test-speech/${this.global.currentLanguageId}`,
-        {
-          prompt: wordToPlay,
-        },
-        "arraybuffer"
-      ).then((result) => {
-        const audioContext = new AudioContext();
-        audioContext.decodeAudioData(result).then((decodedData) => {
-          const audioSource = new AudioBufferSourceNode(audioContext);
-          audioSource.buffer = decodedData;
-          audioSource.connect(audioContext.destination);
-          audioSource.onended = () => {
-            this.playSound = false;
-          };
-          audioSource.start(0);
-        });
-      });
+      return;
+      // if (this.isMuted || this.playSound) {
+      //   return;
+      // }
+      // this.playSound = true;
+      // route(
+      //   "POST",
+      //   `test-speech/${this.global.currentLanguageId}`,
+      //   {
+      //     prompt: wordToPlay,
+      //   },
+      //   "arraybuffer"
+      // ).then((result) => {
+      //   const audioContext = new AudioContext();
+      //   audioContext.decodeAudioData(result).then((decodedData) => {
+      //     const audioSource = new AudioBufferSourceNode(audioContext);
+      //     audioSource.buffer = decodedData;
+      //     audioSource.connect(audioContext.destination);
+      //     audioSource.onended = () => {
+      //       this.playSound = false;
+      //     };
+      //     audioSource.start(0);
+      //   });
+      // });
     },
 
     handleVolume() {
@@ -385,11 +386,13 @@ export default defineComponent({
 }
 
 .play-icon {
+  display: none;
   margin-top: 40px;
   cursor: pointer;
 }
 
 .sound-volume-container {
+  display: none;
   position: fixed;
   left: 10vw;
   bottom: 10vh;
