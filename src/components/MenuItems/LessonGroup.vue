@@ -83,6 +83,7 @@ export default {
     minimise() {
       this.active = true;
       gsap.to("#" + this.id, {
+        fontSize: 18,
         scale: 0.37,
         x: -115,
         y: -95,
@@ -91,11 +92,16 @@ export default {
           this.setExpansionState(true);
         },
       });
+      gsap.to("#" + this.id + " h6", {
+        fontSize: 45,
+        duration: 0.3,
+      });
     },
 
     maximise() {
       this.active = false;
       gsap.to("#" + this.minimisedId, {
+        fontSize: "60px",
         scale: 2.72,
         x: 115,
         y: 95,
@@ -104,6 +110,10 @@ export default {
         onComplete: () => {
           this.setExpansionState(false);
         },
+      });
+      gsap.to("#" + this.minimisedId + " h6", {
+        fontSize: 14,
+        duration: 0.3,
       });
     },
 
@@ -226,13 +236,13 @@ export default {
   padding-right: 20px;
   line-height: 49px;
   color: white;
-  font-size: 49px;
+  font-size: 38px;
   vertical-align: center;
 }
 
 .group-title-min {
   color: white;
-  font-size: 18px;
+  font-size: 16px;
   line-height: 18px;
   vertical-align: center;
 }

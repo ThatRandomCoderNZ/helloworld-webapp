@@ -79,7 +79,6 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from) => {
-  console.log("Triggered");
   const { $cookies } = router.$app.config.globalProperties;
 
   if (

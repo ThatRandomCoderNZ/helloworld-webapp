@@ -27,6 +27,14 @@
               no-data-text="No Languages"
             ></v-select>
           </div>
+          <div class="import-button">
+            <input
+              type="file"
+              id="jsonFile"
+              accept=".json"
+              @change="uploadData"
+            />
+          </div>
         </div>
         <div class="content-manager-editor">
           <div class="section-container">
@@ -189,6 +197,10 @@ export default {
       return this.languageData;
     },
 
+    currentType() {
+      return this.typeFilter === "ALL" ? "NATIVE" : this.typeFilter;
+    },
+
     currentLanguage() {
       if (this.currentValue === "") {
         return 0;
@@ -201,6 +213,23 @@ export default {
   },
 
   methods: {
+    uploadData(e) {
+      const files = e.target.files || e.dataTransfer.files;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const payload = JSON.parse(e.target.result);
+        const languageId = this.languageData[this.currentLanguage].id;
+        route(
+          "POST",
+          `${languageId}/import-json/${this.currentType}`,
+          payload
+        ).then((result) => {
+          console.log(result);
+        });
+      };
+      reader.readAsText(files[0]);
+    },
+
     doSomething() {
       console.log("something done");
     },
@@ -248,6 +277,16 @@ export default {
 </script>
 
 <style scoped>
+.import-button {
+  padding-top: 50px;
+  padding-left: 50px;
+  width: 300px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .selector {
   width: 10vw;
   margin-left: 30px;

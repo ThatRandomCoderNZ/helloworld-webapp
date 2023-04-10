@@ -33,15 +33,38 @@
     </div>
     <div class="center-content">
       <div class="main-lesson-container">
+        <div class="word-in-sentence-container">
+          <div class="foreign-sentence" @click="handlePlay(foreignSentence)">
+            {{ foreignSentence }}
+          </div>
+          <div class="english-sentence">{{ englishSentence }}</div>
+        </div>
         <div class="main-title-container">
-          <h1 class="main-title">{{ currentLesson.foreignWord }}</h1>
+          <h1 class="main-title">
+            <span @click="generateSentenceWithWord">{{
+              currentLesson.foreignWord
+            }}</span>
+          </h1>
         </div>
         <div class="sub-title-container">
           <h1 class="sub-title" v-if="currentLesson.foreignAlternative">
             {{ currentLesson.foreignAlternative }}
           </h1>
         </div>
-
+        <div class="play-sound-container">
+          <div class="play-icon" @click="handlePlay(currentLesson.foreignWord)">
+            <i
+              v-if="!playSound"
+              class="fa-sharp fa-solid fa-play fa-2xl"
+              style="color: #98d6d6"
+            ></i>
+            <i
+              v-else
+              class="fa-sharp fa-solid fa-stop fa-2xl"
+              style="color: #98d6d6"
+            ></i>
+          </div>
+        </div>
         <div class="keyboard-container">
           <input
             v-model="lessonAttempt"
@@ -50,6 +73,20 @@
             type="text"
             ref="userEntry"
           />
+        </div>
+        <div class="sound-volume-container">
+          <div class="volume-icon" @click="handleVolume">
+            <i
+              v-if="!isMuted"
+              class="fa-solid fa-volume-high fa-2xl"
+              style="color: #98d6d6"
+            ></i>
+            <i
+              v-else
+              class="fa-solid fa-volume-xmark fa-2xl"
+              style="color: #98d6d6"
+            ></i>
+          </div>
         </div>
       </div>
     </div>
@@ -65,18 +102,21 @@ import { useContentStore } from "@/stores/content";
 import { useUserStore } from "@/stores/user";
 import SideReader from "@/components/SideReader.vue";
 import LessonHintInfo from "@/components/LessonHintInfo.vue";
+import { useGlobalStore } from "@/stores/global";
 
 export default defineComponent({
   components: { LessonHintInfo, SideReader },
   setup() {
     const store = useContentStore();
     const user = useUserStore();
+    const global = useGlobalStore();
 
     const userEntry = ref<HTMLInputElement>();
     return {
       store,
       userEntry,
       user,
+      global,
     };
   },
 
@@ -96,15 +136,92 @@ export default defineComponent({
       questionTimer: 0,
       questionSequence: [0],
       currentQuestion: -1,
+      playSound: false,
+      isMuted: false,
+      sentenceWithWord: "",
     };
   },
 
+  // to something/else (than)
+  // to something
+  // to else
+  // to something than
+  // to else than
   methods: {
+    generateSentenceWithWord() {
+      route(
+        "GET",
+        `sentence-with-word/${this.global.currentLanguageId}/${
+          this.currentLesson.foreignWord.split("/")[0]
+        }`
+      ).then((result) => {
+        this.sentenceWithWord = result;
+      });
+    },
+
+    handlePlay(wordToPlay: string) {
+      if (this.isMuted || this.playSound) {
+        return;
+      }
+      this.playSound = true;
+      route(
+        "POST",
+        `test-speech/${this.global.currentLanguageId}`,
+        {
+          prompt: wordToPlay,
+        },
+        "arraybuffer"
+      ).then((result) => {
+        const audioContext = new AudioContext();
+        audioContext.decodeAudioData(result).then((decodedData) => {
+          const audioSource = new AudioBufferSourceNode(audioContext);
+          audioSource.buffer = decodedData;
+          audioSource.connect(audioContext.destination);
+          audioSource.onended = () => {
+            this.playSound = false;
+          };
+          audioSource.start(0);
+        });
+      });
+    },
+
+    handleVolume() {
+      this.isMuted = !this.isMuted;
+    },
+
+    derivePossibilities(expected: string): Array<string> {
+      const allAllowed = [];
+
+      expected.split("/").forEach((option) => {
+        allAllowed.push(option.trim());
+        allAllowed.push(
+          option.startsWith("the ") && option.length > 4
+            ? option.trim().slice(4)
+            : option.trim()
+        );
+      });
+
+      allAllowed.push(
+        expected,
+        expected.startsWith("the ") && expected.length > 4
+          ? expected.slice(4)
+          : expected,
+        expected.replace(new RegExp("\\(.*\\)"), "").trim(),
+        expected.replace("(", "").replace(")", "").trim()
+      );
+      return allAllowed;
+    },
+
     handleLesson() {
-      if (
-        this.lessonAttempt.trim().toLowerCase() ===
-        this.currentLesson.nativeWord.trim().toLowerCase()
-      ) {
+      const expected = this.currentLesson.nativeWord.trim().toLowerCase();
+      console.log(expected.replace("(", "").replace(")", "").trim());
+      const allAllowed = this.derivePossibilities(expected);
+      let attempt = this.lessonAttempt.trim().toLowerCase();
+      if (attempt.startsWith("the ") && attempt.length > 4) {
+        attempt = attempt.slice(4);
+      }
+      if (allAllowed.includes(attempt)) {
+        this.sentenceWithWord = "";
         this.lessonAttempt = "";
         this.lessonProgress += 1;
         const timeTaken = (Date.now() - this.questionTimer) / 1000;
@@ -215,6 +332,22 @@ export default defineComponent({
   },
 
   computed: {
+    foreignSentence() {
+      if (this.sentenceWithWord === "") {
+        return "";
+      }
+
+      return this.sentenceWithWord.split("/")[0];
+    },
+
+    englishSentence() {
+      if (this.sentenceWithWord === "") {
+        return "";
+      }
+
+      return this.sentenceWithWord.split("/")[1];
+    },
+
     lessonData() {
       return this.data;
     },
@@ -233,6 +366,39 @@ export default defineComponent({
 </script>
 
 <style>
+.word-in-sentence-container {
+  margin-top: 40px;
+  height: 5vh;
+}
+
+.foreign-sentence {
+  font-size: 24px;
+  font-weight: bold;
+  color: #98d6d6;
+  text-align: center;
+  cursor: pointer;
+}
+
+.english-sentence {
+  color: #98d6d6;
+  text-align: center;
+}
+
+.play-icon {
+  margin-top: 40px;
+  cursor: pointer;
+}
+
+.sound-volume-container {
+  position: fixed;
+  left: 10vw;
+  bottom: 10vh;
+}
+
+.volume-icon {
+  cursor: pointer;
+}
+
 .progress-bar {
   position: relative;
   width: 60%;
@@ -263,12 +429,13 @@ export default defineComponent({
 }
 
 .main-title-container {
+  cursor: pointer;
   display: flex;
   align-items: center;
 }
 
 .main-title {
-  margin-top: 20vh;
+  margin-top: 15vh;
   font-size: 60px;
   color: #98d6d6;
   text-align: center;
