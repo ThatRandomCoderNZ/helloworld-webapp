@@ -17,6 +17,7 @@ import {
   userIsLoggedIn,
 } from "@/helpers/api-routes";
 import type { App } from "vue";
+import TestView from "@/views/TestView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -75,6 +76,11 @@ const router = createRouter({
       name: "chat",
       component: ChatView,
     },
+    {
+      path: "/test",
+      name: "test",
+      component: TestView,
+    },
   ],
 });
 
@@ -96,7 +102,7 @@ router.beforeEach(async (to, from) => {
     return { name: "home" };
   }
 
-  if (to.path.startsWith("/admin")) {
+  if (to.path.startsWith("/admin") || to.path.startsWith("/test")) {
     const hasAdminAccess = await checkAdminAccess($cookies);
     if (!hasAdminAccess) {
       return { name: from.name ?? "home" };
