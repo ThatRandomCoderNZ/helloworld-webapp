@@ -33,12 +33,16 @@
     </div>
     <div class="center-content">
       <div class="main-lesson-container">
-        <div class="word-in-sentence-container">
+        <div class="word-in-sentence-container" v-if="!loadingWord">
           <div class="foreign-sentence" @click="handlePlay(foreignSentence)">
             {{ foreignSentence }}
           </div>
           <div class="english-sentence">{{ englishSentence }}</div>
         </div>
+        <div class="word-in-sentence-container" v-else>
+          <loading-spinner></loading-spinner>
+        </div>
+
         <div class="main-title-container">
           <h1 class="main-title">
             <span @click="generateSentenceWithWord">{{
@@ -103,9 +107,10 @@ import { useUserStore } from "@/stores/user";
 import SideReader from "@/components/SideReader.vue";
 import LessonHintInfo from "@/components/LessonHintInfo.vue";
 import { useGlobalStore } from "@/stores/global";
+import LoadingSpinner from "@/components/LoadingSpinner.vue";
 
 export default defineComponent({
-  components: { LessonHintInfo, SideReader },
+  components: { LessonHintInfo, SideReader, LoadingSpinner },
   setup() {
     const store = useContentStore();
     const user = useUserStore();
@@ -139,6 +144,7 @@ export default defineComponent({
       playSound: false,
       isMuted: false,
       sentenceWithWord: "",
+      loadingWord: false,
     };
   },
 
@@ -149,6 +155,7 @@ export default defineComponent({
   // to else than
   methods: {
     generateSentenceWithWord() {
+      this.loadingWord = true;
       route(
         "GET",
         `sentence-with-word/${this.global.currentLanguageId}/${
@@ -156,6 +163,7 @@ export default defineComponent({
         }`
       ).then((result) => {
         this.sentenceWithWord = result;
+        this.loadingWord = false;
       });
     },
 
