@@ -157,9 +157,9 @@ export default defineComponent({
         });
 
         typewriter
-          .pauseFor(3000)
-          .typeString(this.currentWords.english)
           .pauseFor(1000)
+          .typeString(this.currentWords.english)
+          .pauseFor(750)
           .callFunction(resolve)
           .start();
       });
