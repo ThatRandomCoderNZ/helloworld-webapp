@@ -1,4 +1,5 @@
 <template>
+  <ChatAssistant></ChatAssistant>
   <div class="dashboard-container">
     <app-header></app-header>
     <div class="main-dashboard-container">
@@ -29,6 +30,7 @@
 import LessonSection from "@/components/MenuItems/LessonSection.vue";
 import { useGlobalStore } from "@/stores/global";
 import AppHeader from "@/components/AppHeader.vue";
+import ChatAssistant from "@/components/ChatAssistant.vue";
 
 export default {
   setup() {
@@ -40,7 +42,7 @@ export default {
   },
 
   name: "DashboardAlternative",
-  components: { AppHeader, LessonSection },
+  components: {ChatAssistant, AppHeader, LessonSection },
 
   data() {
     return {
@@ -66,6 +68,7 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  padding-bottom: 100px;
 }
 
 .slider-container {

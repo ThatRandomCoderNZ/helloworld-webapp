@@ -1,11 +1,12 @@
 <template>
   <div :id="id" :ref="refId" class="lesson-container" @click="navigateToLesson">
-    <div class="lesson-tile">
+    <div :class="lessonStyle">
       <h6 class="lesson-title">{{ title }}</h6>
     </div>
-    <div class="lesson-progress-bar">
-      <div class="progress-fill" :style="'width: ' + progressFill + '%'"></div>
-    </div>
+<!--    <div class="lesson-progress-bar">-->
+<!--      <div class="progress-fill" :style="'width: ' + progressFill + '%'"></div>-->
+<!--    </div>-->
+    <ProgressBar :progress-fill="progress" :mastery-fill="mastery"></ProgressBar>
   </div>
 </template>
 
@@ -13,9 +14,11 @@
 import { gsap } from "gsap/dist/gsap";
 import router from "@/router";
 import { useContentStore } from "@/stores/content";
+import ProgressBar from "@/components/ProgressBar.vue";
 
 export default {
   name: "LessonTile",
+  components: {ProgressBar},
 
   setup() {
     const store = useContentStore();
@@ -33,6 +36,7 @@ export default {
     parentY: Number,
     active: Boolean,
     progress: Number,
+    mastery: Number,
   },
 
   data() {
@@ -51,6 +55,10 @@ export default {
   },
 
   computed: {
+    lessonStyle() {
+      return "lesson-tile " + (this.mastery >= 100 ? " mastered" : "");
+    },
+
     id() {
       return (
         "lesson-" +
@@ -175,9 +183,21 @@ export default {
   border-radius: 20px;
   top: -2px;
 }
+.mastery-fill {
+  position: relative;
+  top: -4px;
+  height: 4px;
+  left: -1px;
+  border-radius: 20px;
+  background-color: #b19dcf;
+}
 
 .progress-fill {
   height: 100%;
   background-color: #9dcfcf;
+}
+
+.mastered {
+  background-color: #cf9dcf;
 }
 </style>

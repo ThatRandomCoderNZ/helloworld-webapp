@@ -1,7 +1,15 @@
 <template>
   <div ref="group-container" class="lesson-group-container">
-    <div v-if="!expanded" :id="id" class="maximised-group" @click="minimise">
-      <h6 class="group-title">{{ mainTitle }}</h6>
+    <div v-if="!expanded">
+      <div :id="id" class="maximised-group" @click="minimise">
+        <h6 class="group-title">{{ mainTitle }}</h6>
+      </div>
+      <div v-if="!active" class="progress-container">
+        <ProgressBar
+          :progress-fill="lessonsAttempted"
+          :mastery-fill="totalLessonProgress"
+        ></ProgressBar>
+      </div>
     </div>
     <div v-else class="expanded-group-container">
       <div class="minimised-group" :id="minimisedId" @click="maximise">
@@ -15,7 +23,8 @@
         :placement="(lessons.length + 0.1) * 0.1 - index * 0.1"
         :parentX="xPosition()"
         :parentY="yPosition()"
-        :progress="lesson.progress"
+        :progress="lesson.attempted"
+        :mastery="lesson.progress"
         :active="active"
         @retracted="handleMenuClose"
       />
@@ -29,10 +38,11 @@ import { gsap } from "gsap/dist/gsap";
 import { route } from "@/helpers/api-routes";
 import { usePresentationStore } from "@/stores/presentation";
 import { useUserStore } from "@/stores/user";
+import ProgressBar from "@/components/ProgressBar.vue";
 
 export default {
   name: "LessonGroup",
-  components: { LessonTile },
+  components: { ProgressBar, LessonTile },
 
   setup() {
     const presentationStore = usePresentationStore();
@@ -68,6 +78,22 @@ export default {
         }
         return 1;
       });
+    },
+
+    lessonsAttempted() {
+      return Math.round(
+        this.lessonsData.reduce((currentValue, item) => {
+          return currentValue + item.attempted;
+        }, 0) / this.lessonsData.length
+      );
+    },
+
+    totalLessonProgress() {
+      return Math.round(
+        this.lessonsData.reduce((currentValue, item) => {
+          return currentValue + item.progress;
+        }, 0) / this.lessonsData.length
+      );
     },
 
     id() {
@@ -156,6 +182,7 @@ export default {
           }/progress/grouped?wordIds=${vocabIds.join(",")}`
         ).then((progressData) => {
           let progress = 0;
+          let attempted = 0;
           if (progressData.length > 0) {
             progress =
               progressData
@@ -165,8 +192,14 @@ export default {
                 .reduce((sum, value) => {
                   return sum + value;
                 }) / progressData.length;
+            attempted =
+                (progressData
+                .map((progressInfo) => {
+                  return progressInfo.progress;
+                }).filter((value) => value > 0).length / progressData.length) * 100;
           }
           lesson["progress"] = progress;
+          lesson["attempted"] = attempted;
           this.lessonsData.push(lesson);
         });
       });
@@ -246,4 +279,27 @@ export default {
   line-height: 18px;
   vertical-align: center;
 }
+
+.progress-container {
+  margin-top: 7px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lesson-progress-bar {
+  width: 280px;
+  height: 5px;
+  border: 1px solid #9dcfcf;
+  border-radius: 20px;
+  top: -2px;
+}
+
+.mastery-fill {
+  position: relative;
+  top: -20px;
+  height: 12px;
+}
+
 </style>

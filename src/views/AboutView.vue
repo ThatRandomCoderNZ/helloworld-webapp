@@ -1,4 +1,5 @@
 <template>
+  <ChatAssistant></ChatAssistant>
   <SideReader :force-display="showHints">
     <lesson-hint-info :lesson-data="lessonData" />
   </SideReader>
@@ -108,9 +109,10 @@ import SideReader from "@/components/SideReader.vue";
 import LessonHintInfo from "@/components/LessonHintInfo.vue";
 import { useGlobalStore } from "@/stores/global";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
+import ChatAssistant from "@/components/ChatAssistant.vue";
 
 export default defineComponent({
-  components: { LessonHintInfo, SideReader, LoadingSpinner },
+  components: {ChatAssistant, LessonHintInfo, SideReader, LoadingSpinner },
   setup() {
     const store = useContentStore();
     const user = useUserStore();
@@ -236,7 +238,7 @@ export default defineComponent({
         console.log(timeTaken);
         const targetTime = Math.max(
           this.currentLesson.nativeWord.length * 0.3,
-          2
+          4
         );
         const progress =
           timeTaken <= targetTime
